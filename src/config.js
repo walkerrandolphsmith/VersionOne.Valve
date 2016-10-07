@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { V1Protocol, V1Port, V1Host, V1Instance } = process.env;
 
 module.exports = {

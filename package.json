@@ -23,6 +23,7 @@
   "dependencies": {
     "axios": "^0.13.1",
     "cli-spinner": "^0.2.5",
+    "dotenv": "^2.0.0",
     "v1sdk": "^2.2.1"
   }
 }
