@@ -1,0 +1,28 @@
+{
+  "name": "VersionOne.Valve",
+  "version": "1.0.0",
+  "description": "Node application to get data into a VersionOne instance",
+  "main": "index.js",
+  "scripts": {
+    "help": "run node featureName/index.js to run commands",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walkerrandolphsmith/VersionOne.Valve.git"
+  },
+  "keywords": [
+    "VersionOne"
+  ],
+  "author": "walkerrandolphsmith@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/walkerrandolphsmith/VersionOne.Valve/issues"
+  },
+  "homepage": "https://github.com/walkerrandolphsmith/VersionOne.Valve#readme",
+  "dependencies": {
+    "axios": "^0.13.1",
+    "cli-spinner": "^0.2.5",
+    "v1sdk": "^2.2.1"
+  }
+}
