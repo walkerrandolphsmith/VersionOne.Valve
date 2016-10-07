@@ -1,4 +1,4 @@
-const Runner = require('./../src/runner');
+const Runner = require('./../../src/runner');
 
 const runner = new Runner();
 

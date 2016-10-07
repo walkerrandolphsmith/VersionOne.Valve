@@ -48,6 +48,16 @@ V1Instance=v1sdktesting
 V1AccessToken=Bearer 1.jA9m1Of4OUnAx/SCuOIGyE8DiCo=
 ```
 
+### New Features
+Valve concentrates on automating features of VersionOne instance as a collection of commands.
+Therefore the directory structure models this by having a `features` directory,
+such that each sub directory is a feature that contains a collection of commands.
+
+Creating new features can be as easy as running:
+```
+node utils/index.js <feature-name>
+```
+
 ### Run
 Run a collection of commands grouped by feature
 ```
