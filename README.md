@@ -55,13 +55,13 @@ such that each sub directory is a feature that contains a collection of commands
 
 Creating new features can be as easy as running:
 ```
-node utils/index.js <feature-name>
+gulp template --name <feature-name>
 ```
 
 ### Run
 Run a collection of commands grouped by feature
 ```
-npm start <dir-name>/index.js
+gulp run --name <dir-name>/index.js
 ```
 
 ### Test
