@@ -61,7 +61,7 @@ node utils/index.js <feature-name>
 ### Run
 Run a collection of commands grouped by feature
 ```
-node <dir-name>/index.js
+npm start <dir-name>/index.js
 ```
 
 ### Test

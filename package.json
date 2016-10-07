@@ -4,6 +4,7 @@
   "description": "Node application to get data into a VersionOne instance",
   "main": "index.js",
   "scripts": {
+    "start": "node run.js",
     "help": "run node featureName/index.js to run commands",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

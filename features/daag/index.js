@@ -1,6 +1,6 @@
 const Runner = require('./../../src/runner');
 
-class Daag extends Runner {
+module.exports = class Daag extends Runner {
     command() {
         return new Promise((resolve, reject) => {
             const v1 = this.authenticateAs('admin', 'admin');
@@ -23,7 +23,4 @@ class Daag extends Runner {
             resolve(results);
         });
     }
-}
-
-const runner = new Daag();
-runner.execute();
+};

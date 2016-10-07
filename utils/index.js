@@ -15,16 +15,30 @@ const fileName = `${dir}/index.js`;
 
 const contents = `const Runner = require('./../../src/runner');
 
-const runner = new Runner();
+module.exports = class ${name} extends Runner {
+    command() {
+        return new Promise((resolve, reject) => {
+            const v1 = this.authenticateAs('admin', 'admin');
 
-const command = () => new Promise((resolve, reject) => {
-    setTimeout(() => {
-        console.log('${name} is performing an action.');
-        resolve();
-    }, 1000);
-});
+            const results = v1.query({
+                    from: 'PrimaryWorkitem',
+                    select: [
+                        'Name'
+                    ],
+                    where: {
+                        ID: 'Story:8546'
+                    }
+                })
+                .then(response => {
+                    console.log(response);
+                }).catch((err) => {
+                    reject('error talking with V1');
+                });
 
-runner.execute(command);`;
+            resolve(results);
+        });
+    }
+};`;
 
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
