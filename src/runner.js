@@ -13,6 +13,10 @@ module.exports = class Runner {
         console.info(`==> 💻  Connecting to the VersionOne instance: ${url}`);
     }
 
+    authenticateAs(username, password) {
+        return this.authenticate(username, password)
+    }
+
     start() {
         this.spinner.start();
         this.startTime = Date.now()
@@ -23,10 +27,14 @@ module.exports = class Runner {
         this.spinner.stop();
     }
 
-    execute(command) {
+    execute() {
         this.start();
-        return command().then(() => {
+        return this.command().then(() => {
             this.stop();
         });
+    }
+
+    command() {
+        return new Promise.resolve();
     }
 };
