@@ -1,0 +1,1 @@
+module.exports = (oid) => oid.split(':').splice(0,2).join(':');

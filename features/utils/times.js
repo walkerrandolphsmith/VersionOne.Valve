@@ -1,0 +1,1 @@
+module.exports = (times) => Array.from(Array(times), (_, i) => i);
