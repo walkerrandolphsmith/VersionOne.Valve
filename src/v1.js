@@ -5,7 +5,7 @@ const axiosConnector = v1sdk.axiosConnector;
 const { v1Protocol, v1Port, v1Host, v1Instance } = require('./config');
 
 module.exports = function() {
-    const url = `${v1Protocol}://${v1Port}:${v1Host}/${v1Instance}/`;
+    const url = `${v1Protocol}://${v1Host}:${v1Port}/${v1Instance}/`;
 
     const axiosConnectedSdk = axiosConnector(axios)(sdk);
     const unauthenticatedV1 = axiosConnectedSdk(v1Host, v1Instance, v1Port, v1Protocol);
