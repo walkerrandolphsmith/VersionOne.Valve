@@ -2,6 +2,8 @@ const Runner = require('./../../runner');
 const dropMoment = require('./../utils/dropMoment');
 const times = require('./../utils/times');
 
+const DONE_STORY_STATUS = 'StoryStatus:135';
+
 const getScheme = async (v1, schemeValues) => v1.create('Scheme', {
     Name: 'ValveScheme',
     SelectedValues: schemeValues
@@ -70,7 +72,7 @@ const createStory = async (v1, scopeOid) => v1
 const createDoneStory = async (v1, scopeOid) => v1
     .create('Story', {
         Name: 'DoneStory',
-        Status: 'StoryStatus:135',
+        Status: DONE_STORY_STATUS,
         Scope: scopeOid
     });
 
@@ -108,7 +110,8 @@ module.exports = class Daag extends Runner {
 
         const schemeValues = [
             developmentPhase, testingPhase, productionPhase,
-            epicCategory, featureCategory, subFeatureCategory, initiativeCategory
+            epicCategory, featureCategory, subFeatureCategory, initiativeCategory,
+            DONE_STORY_STATUS
         ];
 
         const scheme = await getScheme(v1, schemeValues);
