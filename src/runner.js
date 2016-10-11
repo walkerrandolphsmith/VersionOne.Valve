@@ -31,7 +31,9 @@ module.exports = class Runner {
         this.start();
         return this.command().then(() => {
             this.stop();
-        });
+        }).catch(error => {
+            console.log('Something went wrong... For more details use try catch in your feature. Details: ', error);
+        })
     }
 
     async command() {
