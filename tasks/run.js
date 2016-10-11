@@ -11,14 +11,12 @@ const knownOptions = {
 const options = minimist(process.argv.slice(2), knownOptions);
 
 
-gulp.task('run', [], function() {
+gulp.task('run', ['build'], function() {
     const name = options.name;
-
-    const absolutePath = path.resolve(__dirname, '../', 'features/', name);
-
+    const absolutePath = path.resolve(__dirname, '../', 'dist', 'features/', name);
     fs.exists(absolutePath, (exists) => {
         if(exists) {
-            const Runner = require(`../features/${name}`);
+            const Runner = require(`../dist/features/${name}`);
             const runner = new Runner();
 
             runner.execute();

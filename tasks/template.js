@@ -11,7 +11,7 @@ var knownOptions = {
 var options = minimist(process.argv.slice(2), knownOptions);
 
 
-gulp.task('template', [], function() {
+gulp.task('template', ['build'], function() {
     const name = options.name;
 
     if(!name) {
@@ -20,11 +20,11 @@ gulp.task('template', [], function() {
         return;
     }
 
-    const dir = path.resolve(__dirname, '../', 'features', name);
+    const dir = path.resolve(__dirname, '../', 'src', 'features', name);
     const fileName = `${dir}/index.js`;
 
 
-    const contents = `const Runner = require('./../../src/runner');
+    const contents = `const Runner = require('./../../runner');
 
 module.exports = class ${name} extends Runner {
     command() {
