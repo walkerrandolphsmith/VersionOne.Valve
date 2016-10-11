@@ -38,31 +38,6 @@ const getEpicCategories = async (v1, name) => v1
         : v1.create('EpicCategory', { Name: name }).then(category => dropMoment(category.id))
     );
 
-const getEpics = (v1, scopeOid) => times(10).map(i => v1.create('Epic', {
-    Name: `ValveEpic${i}`,
-    Scope: scopeOid
-}));
-
-const getWorkitems = (v1, scopeOid, epics) => Promise.all(
-    epics
-        .reduce((promises, epic) => promises.concat(
-            times(10).map(i => v1.create((i % 2 === 0 ? 'Story' : 'Defect'), {
-                Name: `ValveStory${i}`,
-                Scope: scopeOid,
-                Super: dropMoment(epic.id)
-            }))
-        ), [])
-);
-
-const getChangeSets = (v1, workitemOids) => Promise.all(
-    workitemOids.map(workitemOid => v1.create('ChangeSet', {
-        Name: 'ChangeSet',
-        PrimaryWorkitems: [
-            workitemOid
-        ]
-    }))
-);
-
 const createStory = async (v1, scopeOid) => v1
     .create('Story', {
         Name: 'InProgressStory',
