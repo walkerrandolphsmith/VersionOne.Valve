@@ -265,11 +265,31 @@ module.exports = class Daag extends Runner {
             spreadChangeSets[4], spreadChangeSets[5]
         ]);
 
-        return Promise.resolve();
 
-        // return Promise.all(getEpics(v1, scopeOid))
-        //     .then(epics => getWorkitems(v1, scopeOid, epics))
-        //     .then(workitems => workitems.map(wi => dropMoment(wi.id)))
-        //     .then(workitemOids => getChangeSets(v1, workitemOids));
+        /*--------------------------------------------------------------------------------------------*/
+        /*---------------------------------- Create tons of epics ------------------------------------*/
+        /*--------------------------------------------------------------------------------------------*/
+        const loeStories = await Promise.all(times(10).map(i => createStory(v1, scopeOid)));
+        const loeChangeSets = await Promise.all(
+            loeStories.map(story => createChangeSet(v1, [dropMoment(story.id)] ))
+        ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+
+        const loeEpics = await Promise.all(
+            times(100).map(i => v1.create('Epic', {
+                Name: 'ValveEpic Epic',
+                Category: epicCategory,
+                Scope: scopeOid
+            }))
+        );
+
+        await loeEpics.map(async(epic) => {
+            return await Promise.all(
+                loeStories.slice(0, 9).map(story => v1.update(dropMoment(story.id), {
+                    Super: dropMoment(epic.id)
+                }))
+            )
+        });
+
+        return Promise.resolve();
     }
 };
