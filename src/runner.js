@@ -34,7 +34,7 @@ module.exports = class Runner {
         });
     }
 
-    command() {
+    async command() {
         return new Promise.resolve();
     }
 };

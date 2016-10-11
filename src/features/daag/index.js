@@ -59,7 +59,7 @@ const getChangeSets = (v1, workitems) => Promise.all(
 );
 
 module.exports = class Daag extends Runner {
-    command = async () => {
+    async command() {
         const v1 = this.authenticateAs('admin', 'admin');
 
         const phases = await Promise.all([
