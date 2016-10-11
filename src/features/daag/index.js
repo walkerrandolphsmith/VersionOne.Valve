@@ -7,12 +7,18 @@ const getScheme = async (v1, schemeValues) => v1.create('Scheme', {
     SelectedValues: schemeValues
 });
 
-const getScope = async (v1, schemeOid) => v1.create('Scope', {
-    Name: 'ValveScope',
-    Parent: 'Scope:0',
-    Scheme: schemeOid,
-    BeginDate: '2016-06-28'
-});
+const getScope = async (v1, name, schemeOid) => v1
+    .query({
+        from: 'Scope', select: ['Name'], where: { Name: name }
+    }).then(results => results[0][0]
+        ? results[0][0]._oid
+        : v1.create('Scope', {
+            Name: name,
+            Parent: 'Scope:0',
+            Scheme: schemeOid,
+            BeginDate: '2016-06-28'
+        }).then(scope => dropMoment(scope.id))
+    );
 
 const getPhase = (v1, name) => v1
     .query({
@@ -107,8 +113,7 @@ module.exports = class Daag extends Runner {
 
         const scheme = await getScheme(v1, schemeValues);
         const schemeOid = dropMoment(scheme.id);
-        const scope = await getScope(v1, schemeOid);
-        const scopeOid = dropMoment(scope.id);
+        const scopeOid = await getScope(v1, 'ValveScope FINAL', schemeOid);
 
         const doneStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
         const doneChangeSets = await Promise.all(
@@ -119,6 +124,57 @@ module.exports = class Daag extends Runner {
         const onGoingChangeSets = await Promise.all(
             onGoingStories.map(story => createChangeSet(v1, [dropMoment(story.id)] ))
         ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+
+        /*--------------------------------------------------------------------------------------------*/
+        /*---------------------------------- ASSOICATE WORKITEMS TO EPICS ----------------------------*/
+        /*--------------------------------------------------------------------------------------------*/
+		const epicTypeEpic = await v1.create('Epic', {
+			Name: 'ValveEpic Epic',
+			Category: epicCategory,
+			Scope: scopeOid
+		});
+
+		const epicTypeFeature = await v1.create('Epic', {
+			Name: 'ValveEpic Feature',
+			Category: featureCategory,
+			Scope: scopeOid
+		});
+
+        await Promise.all(
+            onGoingStories.slice(0, 5).map(story => v1.update(dropMoment(story.id), {
+                Super: dropMoment(epicTypeEpic.id)
+            }))
+        );
+
+        await Promise.all(
+            onGoingStories.slice(5, 9).map(story => v1.update(dropMoment(story.id), {
+                Super: dropMoment(epicTypeFeature.id)
+            }))
+        );
+
+        const epicTypeSubFeature = await v1.create('Epic', {
+			Name: 'ValveEpic SubFeature',
+			Category: subFeatureCategory,
+			Scope: scopeOid
+		});
+
+		const epicTypeIniative = await v1.create('Epic', {
+			Name: 'ValveEpic Initiative',
+			Category: initiativeCategory,
+			Scope: scopeOid
+		});
+
+        await Promise.all(
+            doneStories.slice(0, 5).map(story => v1.update(dropMoment(story.id), {
+                Super: dropMoment(epicTypeSubFeature.id)
+            }))
+        );
+
+        await Promise.all(
+            doneStories.slice(5, 9).map(story => v1.update(dropMoment(story.id), {
+                Super: dropMoment(epicTypeIniative.id)
+            }))
+        );
 
         /*--------------------------------------------------------------------------------------------*/
         /*----------------------------------- FULLY MATURED BUNDLE -----------------------------------*/
@@ -143,7 +199,7 @@ module.exports = class Daag extends Runner {
         const MIXED_WI_STATUS_PACKAGE = 'Matured Bundle Package';
 
         await createBundle(v1, developmentPhase, MIXED_WI_STATUS_PACKAGE, [
-            doneChangeSets[0], doneChangeSets[1], doneChangeSets[2], onGoingChangeSets[0], onGoingChangeSets[1]
+            ...doneChangeSets, onGoingChangeSets[0], onGoingChangeSets[1]
         ]);
 
 
@@ -206,9 +262,11 @@ module.exports = class Daag extends Runner {
             spreadChangeSets[4], spreadChangeSets[5]
         ]);
 
-        return Promise.all(getEpics(v1, scopeOid))
-            .then(epics => getWorkitems(v1, scopeOid, epics))
-            .then(workitems => workitems.map(wi => dropMoment(wi.id)))
-            .then(workitemOids => getChangeSets(v1, workitemOids));
+        return Promise.resolve();
+
+        // return Promise.all(getEpics(v1, scopeOid))
+        //     .then(epics => getWorkitems(v1, scopeOid, epics))
+        //     .then(workitems => workitems.map(wi => dropMoment(wi.id)))
+        //     .then(workitemOids => getChangeSets(v1, workitemOids));
     }
 };
