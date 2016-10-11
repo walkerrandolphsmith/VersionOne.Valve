@@ -113,45 +113,12 @@ module.exports = class Daag extends Runner {
         const doneStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
         const doneChangeSets = await Promise.all(
             doneStories.map(story => createChangeSet(v1, [dropMoment(story.id)] ))
-        );
+        ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         const onGoingStories = await Promise.all(times(10).map(i => createStory(v1, scopeOid)));
         const onGoingChangeSets = await Promise.all(
             onGoingStories.map(story => createChangeSet(v1, [dropMoment(story.id)] ))
-        );
-
-        const rougeStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
-        const rougeChangeSets = await Promise.all(
-            rougeStories.map(story => createRougeChangeSets(v1))
-        );
-
-        const spreadWorkitem = await createStory(v1, scopeOid);
-        const spreadChangeSets = await Promise.all(
-            times(6).map(i => createChangeSet(v1, [dropMoment(spreadWorkitem.id)] ))
-        );
-
-        const sharedWorkitems = await Promise.all(
-            times(3).map(i => createStory(v1, scopeOid))
-        ).then(workitems => workitems.map(workitem => dropMoment(workitem.id)));
-        const sharedChangeSet = await createChangeSet(v1, sharedWorkitems);
-
-
-        /*--------------------------------------------------------------------------------------------*/
-        /*------------------------------------ ROUGE PACKAGE -----------------------------------------*/
-        /*--------------------------------------------------------------------------------------------*/
-        const ROUGE_PACKAGE = 'Rouge Package';
-
-        await createBundle(v1, developmentPhase, ROUGE_PACKAGE, [
-            rougeChangeSets[0], rougeChangeSets[1], rougeChangeSets[3], onGoingChangeSets[0]
-        ]);
-
-        await createBundle(v1, testingPhase, ROUGE_PACKAGE, [
-            rougeChangeSets[0], rougeChangeSets[1], rougeChangeSets[3], onGoingChangeSets[0], onGoingChangeSets[1]
-        ]);
-
-        await createBundle(v1, productionPhase, ROUGE_PACKAGE, [
-            rougeChangeSets[3], rougeChangeSets[4], onGoingChangeSets[3]
-        ]);
+        ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         /*--------------------------------------------------------------------------------------------*/
         /*----------------------------------- FULLY MATURED BUNDLE -----------------------------------*/
@@ -179,10 +146,39 @@ module.exports = class Daag extends Runner {
             doneChangeSets[0], doneChangeSets[1], doneChangeSets[2], onGoingChangeSets[0], onGoingChangeSets[1]
         ]);
 
+
+        /*--------------------------------------------------------------------------------------------*/
+        /*------------------------------------ ROUGE PACKAGE -----------------------------------------*/
+        /*--------------------------------------------------------------------------------------------*/
+        const ROUGE_PACKAGE = 'Rouge Package';
+
+        const rougeStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
+        const rougeChangeSets = await Promise.all(
+            rougeStories.map(story => createRougeChangeSets(v1))
+        ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+
+        await createBundle(v1, developmentPhase, ROUGE_PACKAGE, [
+            rougeChangeSets[0], rougeChangeSets[1], rougeChangeSets[3], onGoingChangeSets[0]
+        ]);
+
+        await createBundle(v1, testingPhase, ROUGE_PACKAGE, [
+            rougeChangeSets[0], rougeChangeSets[1], rougeChangeSets[3], onGoingChangeSets[0], onGoingChangeSets[1]
+        ]);
+
+        await createBundle(v1, productionPhase, ROUGE_PACKAGE, [
+            rougeChangeSets[3], rougeChangeSets[4], onGoingChangeSets[3]
+        ]);
+
         /*--------------------------------------------------------------------------------------------*/
         /*----------------------------------- SHARED COMMIT BUNDLE -----------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
         const SHARED_COMMIT_PACKAGE = 'Shared Commit Package';
+
+        const sharedWorkitems = await Promise.all(
+            times(3).map(i => createStory(v1, scopeOid))
+        ).then(workitems => workitems.map(workitem => dropMoment(workitem.id)));
+        const sharedChangeSet = await createChangeSet(v1, sharedWorkitems)
+            .then(changeSet => dropMoment(changeSet.id));
 
         await createBundle(v1, developmentPhase, SHARED_COMMIT_PACKAGE, [
             sharedChangeSet
@@ -192,6 +188,11 @@ module.exports = class Daag extends Runner {
         /*----------------------------------- SPREAD WORKITEM BUNDLE ---------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
         const SPREAD__PACKAGE = 'Spread workitem in package';
+
+        const spreadWorkitem = await createStory(v1, scopeOid);
+        const spreadChangeSets = await Promise.all(
+            times(6).map(i => createChangeSet(v1, [dropMoment(spreadWorkitem.id)] ))
+        ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         await createBundle(v1, developmentPhase, SPREAD__PACKAGE, [
             spreadChangeSets[0], spreadChangeSets[1]
