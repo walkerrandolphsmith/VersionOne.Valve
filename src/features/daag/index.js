@@ -16,34 +16,19 @@ const getScope = async (v1, schemeOid) => v1.create('Scope', {
 
 const getPhase = (v1, name) => v1
     .query({
-        from: 'Phase',
-        select: ['Name'],
-        where: {
-            Name: name
-        }
-    }).then(results => {
-        if(results[0][0]) {
-            return results[0][0]._oid
-        } else {
-            return v1.create('Phase', { Name: name }).then(phase => dropMoment(phase.id))
-        }
-    });
+        from: 'Phase', select: ['Name'], where: { Name: name }
+    }).then(results => results[0][0]
+        ? results[0][0]._oid
+        : v1.create('Phase', { Name: name }).then(phase => dropMoment(phase.id))
+    );
 
 const getEpicCategories = async (v1, name) => v1
     .query({
-        from: 'EpicCategory',
-        select: ['Name'],
-        where: {
-            Name: name
-        }
-    }).then(results => {
-        if(results[0][0]) {
-            return results[0][0]._oid
-        } else {
-            return v1.create('EpicCategory', { Name: name })
-                .then(category => dropMoment(category.id))
-        }
-    });
+        from: 'EpicCategory', select: ['Name'], where: { Name: name }
+    }).then(results => results[0][0]
+        ? results[0][0]._oid
+        : v1.create('EpicCategory', { Name: name }).then(category => dropMoment(category.id))
+    );
 
 const getEpics = (v1, scopeOid) => times(10).map(i => v1.create('Epic', {
     Name: `ValveEpic${i}`,
