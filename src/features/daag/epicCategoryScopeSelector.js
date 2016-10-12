@@ -3,6 +3,7 @@ const dropMoment = require('./../utils/dropMoment');
 const times = require('./../utils/times');
 
 const DONE_STORY_STATUS = 'StoryStatus:135';
+const OID_NULL = 'NULL';
 
 const getPhase = (v1, name) => v1
     .query({
@@ -112,10 +113,12 @@ module.exports = class Daag extends Runner {
             BeginDate: '2016-06-28'
         }).then(scope => dropMoment(scope.id));
 
+        createStoriesForScope(v1, scopeSibling1Oid, OID_NULL);
         createStoriesForScope(v1, scopeSibling1Oid, developmentPhase);
         createStoriesForScope(v1, scopeSibling1Oid, testingPhase);
-        createStoriesForScope(v1, scopeSibling2Oid, productionPhase);
 
+        createStoriesForScope(v1, scopeSibling2Oid, OID_NULL);
+        createStoriesForScope(v1, scopeSibling2Oid, productionPhase);
 
         return Promise.resolve();
     }
