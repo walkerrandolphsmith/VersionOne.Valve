@@ -1,67 +1,19 @@
-const Runner = require('./../../runner');
-const dropMoment = require('./../utils/dropMoment');
-const times = require('./../utils/times');
-import { DONE_STORY_STATUS, OID_NULL } from './../../constants';
+import Runner from './../../runner';
+import dropMoment from './../../common/dropMoment';
+import times from './../../common/times';
+import { DONE_STORY_STATUS, OID_NULL } from './../../common/constants';
+import {
+    getScope,
+    getPhase,
+    getEpicCategories,
+    createStory,
+    createDoneStory,
+    createChangeSet,
+    createBundle
+} from './utils';
 
 const SCOPE_NAME = 'ValveScope';
 
-const getScope = async(v1, name, schemeOid) => v1
-    .query({
-        from: 'Scope', select: ['Name'], where: {Name: name}
-    }).then(results => results[0][0]
-            ? results[0][0]._oid
-            : v1.create('Scope', {
-            Name: name,
-            Parent: 'Scope:0',
-            Scheme: schemeOid,
-            BeginDate: '2016-06-28'
-        }).then(scope => dropMoment(scope.id))
-    );
-
-const getPhase = (v1, name) => v1
-    .query({
-        from: 'Phase', select: ['Name'], where: {Name: name}
-    }).then(results => results[0][0]
-        ? results[0][0]._oid
-        : v1.create('Phase', {Name: name}).then(phase => dropMoment(phase.id))
-    );
-
-const getEpicCategories = async(v1, name) => v1
-    .query({
-        from: 'EpicCategory', select: ['Name'], where: {Name: name}
-    }).then(results => results[0][0]
-        ? results[0][0]._oid
-        : v1.create('EpicCategory', {Name: name}).then(category => dropMoment(category.id))
-    );
-
-const createStory = async(v1, scopeOid) => v1
-    .create('Story', {
-        Name: 'InProgressStory',
-        Scope: scopeOid
-    });
-
-const createDoneStory = async(v1, scopeOid) => v1
-    .create('Story', {
-        Name: 'DoneStory',
-        Status: DONE_STORY_STATUS,
-        Scope: scopeOid
-    });
-
-const createChangeSet = async(v1, workitemOids) => v1
-    .create('ChangeSet', {
-        Name: 'ChangeSet',
-        PrimaryWorkitems: workitemOids
-    });
-
-const createBundle = async(v1, phaseOid, packageId, changeSetOids) => v1
-    .create('Bundle', {
-        Name: `ValveBundle ${packageId}`,
-        PackageReference: packageId,
-        PackageRevision: 1,
-        Phase: phaseOid,
-        IsCustomLabel: false,
-        ChangeSets: changeSetOids
-    });
 
 module.exports = class Daag extends Runner {
     async command() {
