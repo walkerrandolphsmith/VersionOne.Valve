@@ -1,8 +1,7 @@
 const Runner = require('./../../runner');
 const dropMoment = require('./../utils/dropMoment');
 const times = require('./../utils/times');
-
-const DONE_STORY_STATUS = 'StoryStatus:135';
+import { DONE_STORY_STATUS, OID_NULL } from './../../constants';
 
 const SCOPE_NAME = 'ValveScope';
 const LOAD_TEST = false;

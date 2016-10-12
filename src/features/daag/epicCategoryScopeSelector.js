@@ -1,9 +1,7 @@
 const Runner = require('./../../runner');
 const dropMoment = require('./../utils/dropMoment');
 const times = require('./../utils/times');
-
-const DONE_STORY_STATUS = 'StoryStatus:135';
-const OID_NULL = 'NULL';
+import { DONE_STORY_STATUS, OID_NULL } from './../../constants';
 
 const getPhase = (v1, name) => v1
     .query({
