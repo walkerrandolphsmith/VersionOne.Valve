@@ -4,7 +4,6 @@ const times = require('./../utils/times');
 import { DONE_STORY_STATUS, OID_NULL } from './../../constants';
 
 const SCOPE_NAME = 'ValveScope';
-const LOAD_TEST = false;
 
 const getScope = async(v1, name, schemeOid) => v1
     .query({
@@ -248,48 +247,6 @@ module.exports = class Daag extends Runner {
         await createBundle(v1, productionPhase, SPREAD__PACKAGE, [
             spreadChangeSets[4], spreadChangeSets[5]
         ]);
-
-
-        /*--------------------------------------------------------------------------------------------*/
-        /*---------------------------------- Create tons of epics ------------------------------------*/
-        /*--------------------------------------------------------------------------------------------*/
-
-        if(LOAD_TEST) {
-            console.log('Create tons of epics');
-
-            let loeEpics = [];
-            while (loeEpics.length < 1000) {
-                console.log('created ', loeEpics.length, ' epics');
-                loeEpics = loeEpics.concat(await Promise.all(
-                    times(20).map(i => v1.create('Epic', {
-                        Name: 'ValveEpic LoadEpic ' + i,
-                        Category: epicCategory,
-                        Scope: scopeOid
-                    })))
-                );
-            }
-
-            console.log('creating stories on epics');
-
-            while (loeEpics.length > 0) {
-                console.log("epics remaining: ", loeEpics.length);
-                await Promise.all(loeEpics.slice(0, 2).map(async(epic) => {
-                    const loeStories = await Promise.all(times(10).map(i => createStory(v1, scopeOid)));
-                    const loeChangeSets = await Promise.all(
-                        loeStories.map(story => createChangeSet(v1, [dropMoment(story.id)]))
-                    ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
-
-                    return Promise.all(
-                        loeStories.map(story => v1.update(dropMoment(story.id), {
-                            Super: dropMoment(epic.id)
-                        }))
-                    )
-                }));
-
-                loeEpics.splice(0, 2);
-            }
-        }
-
 
         return Promise.resolve();
     }
