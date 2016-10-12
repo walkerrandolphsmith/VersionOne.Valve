@@ -41,8 +41,18 @@ const createBundle = async(v1, phaseOid, packageId, changeSetOids) => v1
         ChangeSets: changeSetOids
     });
 
-const createStoriesForScope = async (v1, scopeOid, phase) => {
+const createStoriesForScope = async (v1, scopeOid, epicCategory, phase) => {
     const workitems = await Promise.all(times(10).map(i => createStory(v1, scopeOid)));
+    const epic = await v1.create('Epic', {
+        Name: 'Valve Epic',
+        Category: epicCategory,
+        Scope: scopeOid
+    });
+    await workitems.map(story => Promise.all(
+        v1.update(dropMoment(story.id), {
+            Super: dropMoment(epic.id)
+        })
+    ));
     const changeSets = await Promise.all(
         workitems.map(story => createChangeSet(v1, [dropMoment(story.id)]))
     ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
@@ -111,12 +121,15 @@ module.exports = class Daag extends Runner {
             BeginDate: '2016-06-28'
         }).then(scope => dropMoment(scope.id));
 
-        createStoriesForScope(v1, scopeSibling1Oid, OID_NULL);
-        createStoriesForScope(v1, scopeSibling1Oid, developmentPhase);
-        createStoriesForScope(v1, scopeSibling1Oid, testingPhase);
+        createStoriesForScope(v1, scopeSibling1Oid, epicCategory, OID_NULL);
+        createStoriesForScope(v1, scopeSibling1Oid, epicCategory, developmentPhase);
+        createStoriesForScope(v1, scopeSibling1Oid, epicCategory, testingPhase);
+        createStoriesForScope(v1, scopeSibling1Oid, initiativeCategory, OID_NULL);
+        createStoriesForScope(v1, scopeSibling1Oid, initiativeCategory, developmentPhase);
+        createStoriesForScope(v1, scopeSibling1Oid, initiativeCategory, testingPhase);
 
-        createStoriesForScope(v1, scopeSibling2Oid, OID_NULL);
-        createStoriesForScope(v1, scopeSibling2Oid, productionPhase);
+        createStoriesForScope(v1, scopeSibling2Oid, epicCategory, OID_NULL);
+        createStoriesForScope(v1, scopeSibling2Oid, epicCategory, productionPhase);
 
         return Promise.resolve();
     }
