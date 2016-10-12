@@ -26,7 +26,7 @@ gulp.task('template', ['build'], function() {
 
     const contents = `const Runner = require('./../../runner');
 
-module.exports = class ${name} extends Runner {
+module.exports = class ValveRunner extends Runner {
     async command() {
         /*
         *

@@ -7,7 +7,7 @@ import {
     createStoriesForScope
 } from './utils';
 
-module.exports = class Daag extends Runner {
+module.exports = class ValveRunner extends Runner {
     async command() {
         const v1 = this.authenticateAs('admin', 'admin');
 

@@ -11,7 +11,7 @@ import {
 
 const SCOPE_NAME = 'LopsScope';
 
-module.exports = class Daag extends Runner {
+module.exports = class ValveRunner extends Runner {
     async command() {
         const v1 = this.authenticateAs('admin', 'admin');
         const developmentPhase = await getPhase(v1, 'Development');
