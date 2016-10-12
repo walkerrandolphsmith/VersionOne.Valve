@@ -4,12 +4,14 @@ const times = require('./../utils/times');
 
 const DONE_STORY_STATUS = 'StoryStatus:135';
 
-const getScope = async (v1, name, schemeOid) => v1
+const SCOPE_NAME = 'ValveScope MEGA EPICS!';
+
+const getScope = async(v1, name, schemeOid) => v1
     .query({
-        from: 'Scope', select: ['Name'], where: { Name: name }
+        from: 'Scope', select: ['Name'], where: {Name: name}
     }).then(results => results[0][0]
-        ? results[0][0]._oid
-        : v1.create('Scope', {
+            ? results[0][0]._oid
+            : v1.create('Scope', {
             Name: name,
             Parent: 'Scope:0',
             Scheme: schemeOid,
@@ -19,40 +21,40 @@ const getScope = async (v1, name, schemeOid) => v1
 
 const getPhase = (v1, name) => v1
     .query({
-        from: 'Phase', select: ['Name'], where: { Name: name }
+        from: 'Phase', select: ['Name'], where: {Name: name}
     }).then(results => results[0][0]
         ? results[0][0]._oid
-        : v1.create('Phase', { Name: name }).then(phase => dropMoment(phase.id))
+        : v1.create('Phase', {Name: name}).then(phase => dropMoment(phase.id))
     );
 
-const getEpicCategories = async (v1, name) => v1
+const getEpicCategories = async(v1, name) => v1
     .query({
-        from: 'EpicCategory', select: ['Name'], where: { Name: name }
+        from: 'EpicCategory', select: ['Name'], where: {Name: name}
     }).then(results => results[0][0]
         ? results[0][0]._oid
-        : v1.create('EpicCategory', { Name: name }).then(category => dropMoment(category.id))
+        : v1.create('EpicCategory', {Name: name}).then(category => dropMoment(category.id))
     );
 
-const createStory = async (v1, scopeOid) => v1
+const createStory = async(v1, scopeOid) => v1
     .create('Story', {
         Name: 'InProgressStory',
         Scope: scopeOid
     });
 
-const createDoneStory = async (v1, scopeOid) => v1
+const createDoneStory = async(v1, scopeOid) => v1
     .create('Story', {
         Name: 'DoneStory',
         Status: DONE_STORY_STATUS,
         Scope: scopeOid
     });
 
-const createChangeSet = async (v1, workitemOids) => v1
+const createChangeSet = async(v1, workitemOids) => v1
     .create('ChangeSet', {
         Name: 'ChangeSet',
         PrimaryWorkitems: workitemOids
     });
 
-const createBundle = async (v1, phaseOid, packageId, changeSetOids) => v1
+const createBundle = async(v1, phaseOid, packageId, changeSetOids) => v1
     .create('Bundle', {
         Name: `ValveBundle ${packageId}`,
         PackageReference: packageId,
@@ -86,21 +88,23 @@ module.exports = class Daag extends Runner {
             SelectedValues: schemeValues
         }).then(scheme => dropMoment(scheme.id));
 
-        const scopeOid = await getScope(v1, 'ValveScope', schemeOid);
+        const scopeOid = await getScope(v1, SCOPE_NAME, schemeOid);
 
         const doneStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
         const doneChangeSets = await Promise.all(
-            doneStories.map(story => createChangeSet(v1, [dropMoment(story.id)] ))
+            doneStories.map(story => createChangeSet(v1, [dropMoment(story.id)]))
         ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         const onGoingStories = await Promise.all(times(10).map(i => createStory(v1, scopeOid)));
         const onGoingChangeSets = await Promise.all(
-            onGoingStories.map(story => createChangeSet(v1, [dropMoment(story.id)] ))
+            onGoingStories.map(story => createChangeSet(v1, [dropMoment(story.id)]))
         ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         /*--------------------------------------------------------------------------------------------*/
         /*---------------------------------- ASSOICATE WORKITEMS TO EPICS ----------------------------*/
         /*--------------------------------------------------------------------------------------------*/
+        console.log('ASSOICATE WORKITEMS TO EPICS');
+
         const epicTypeEpic = await v1.create('Epic', {
             Name: 'ValveEpic Epic',
             Category: epicCategory,
@@ -152,6 +156,8 @@ module.exports = class Daag extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*----------------------------------- FULLY MATURED BUNDLE -----------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
+        console.log('FULLY MATURED BUNDLE');
+
         const MATURED_BUNDLE_PACKAGE = 'Matured Bundle Package';
 
         await createBundle(v1, developmentPhase, MATURED_BUNDLE_PACKAGE, [
@@ -169,6 +175,8 @@ module.exports = class Daag extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*--------------------------- MIXED WORKITEM STATUS BUNDLE -----------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
+        console.log('MIXED WORKITEM STATUS BUNDLE');
+
         const MIXED_WI_STATUS_PACKAGE = 'Matured Bundle Package';
 
         await createBundle(v1, developmentPhase, MIXED_WI_STATUS_PACKAGE, [
@@ -179,11 +187,13 @@ module.exports = class Daag extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*------------------------------------ ROUGE PACKAGE -----------------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
+        console.log('ROUGE PACKAGE');
+
         const ROUGE_PACKAGE = 'Rouge Package';
 
         const rougeStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
         const rougeChangeSets = await Promise.all(
-            rougeStories.map(story => v1.create('ChangeSet', { Name: 'ChangeSet' }))
+            rougeStories.map(story => v1.create('ChangeSet', {Name: 'ChangeSet'}))
         ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         await createBundle(v1, developmentPhase, ROUGE_PACKAGE, [
@@ -201,6 +211,8 @@ module.exports = class Daag extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*----------------------------------- SHARED COMMIT BUNDLE -----------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
+        console.log('SHARED COMMIT BUNDLE');
+
         const SHARED_COMMIT_PACKAGE = 'Shared Commit Package';
 
         const sharedWorkitems = await Promise.all(
@@ -216,11 +228,13 @@ module.exports = class Daag extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*----------------------------------- SPREAD WORKITEM BUNDLE ---------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
+        console.log('SPREAD WORKITEM BUNDLE');
+
         const SPREAD__PACKAGE = 'Spread workitem in package';
 
         const spreadWorkitem = await createStory(v1, scopeOid);
         const spreadChangeSets = await Promise.all(
-            times(6).map(i => createChangeSet(v1, [dropMoment(spreadWorkitem.id)] ))
+            times(6).map(i => createChangeSet(v1, [dropMoment(spreadWorkitem.id)]))
         ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         await createBundle(v1, developmentPhase, SPREAD__PACKAGE, [
@@ -239,26 +253,40 @@ module.exports = class Daag extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*---------------------------------- Create tons of epics ------------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
-        const loeStories = await Promise.all(times(10).map(i => createStory(v1, scopeOid)));
-        const loeChangeSets = await Promise.all(
-            loeStories.map(story => createChangeSet(v1, [dropMoment(story.id)] ))
-        ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+        console.log('Create tons of epics');
 
-        const loeEpics = await Promise.all(
-            times(100).map(i => v1.create('Epic', {
-                Name: 'ValveEpic Epic',
-                Category: epicCategory,
-                Scope: scopeOid
-            }))
-        );
+        let loeEpics = [];
+        while (loeEpics.length < 1000) {
+            console.log('created ', loeEpics.length, ' epics');
+            loeEpics = loeEpics.concat(await Promise.all(
+                times(20).map(i => v1.create('Epic', {
+                    Name: 'ValveEpic LoadEpic ' + i,
+                    Category: epicCategory,
+                    Scope: scopeOid
+                })))
+            );
+        }
 
-        await loeEpics.map(async(epic) => {
-            return await Promise.all(
-                loeStories.slice(0, 9).map(story => v1.update(dropMoment(story.id), {
-                    Super: dropMoment(epic.id)
-                }))
-            )
-        });
+        console.log('creating stories on epics');
+
+        while (loeEpics.length > 0) {
+            console.log("epics remaining: ", loeEpics.length);
+            await Promise.all(loeEpics.slice(0, 2).map(async(epic) => {
+                const loeStories = await Promise.all(times(10).map(i => createStory(v1, scopeOid)));
+                const loeChangeSets = await Promise.all(
+                    loeStories.map(story => createChangeSet(v1, [dropMoment(story.id)]))
+                ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+
+                return Promise.all(
+                    loeStories.map(story => v1.update(dropMoment(story.id), {
+                        Super: dropMoment(epic.id)
+                    }))
+                )
+            }));
+
+            loeEpics.splice(0, 2);
+        }
+
 
         return Promise.resolve();
     }
