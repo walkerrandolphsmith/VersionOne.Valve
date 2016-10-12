@@ -104,17 +104,17 @@ module.exports = class Daag extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*---------------------------------- ASSOICATE WORKITEMS TO EPICS ----------------------------*/
         /*--------------------------------------------------------------------------------------------*/
-		const epicTypeEpic = await v1.create('Epic', {
-			Name: 'ValveEpic Epic',
-			Category: epicCategory,
-			Scope: scopeOid
-		});
+        const epicTypeEpic = await v1.create('Epic', {
+            Name: 'ValveEpic Epic',
+            Category: epicCategory,
+            Scope: scopeOid
+        });
 
-		const epicTypeFeature = await v1.create('Epic', {
-			Name: 'ValveEpic Feature',
-			Category: featureCategory,
-			Scope: scopeOid
-		});
+        const epicTypeFeature = await v1.create('Epic', {
+            Name: 'ValveEpic Feature',
+            Category: featureCategory,
+            Scope: scopeOid
+        });
 
         await Promise.all(
             onGoingStories.slice(0, 5).map(story => v1.update(dropMoment(story.id), {
@@ -129,16 +129,16 @@ module.exports = class Daag extends Runner {
         );
 
         const epicTypeSubFeature = await v1.create('Epic', {
-			Name: 'ValveEpic SubFeature',
-			Category: subFeatureCategory,
-			Scope: scopeOid
-		});
+            Name: 'ValveEpic SubFeature',
+            Category: subFeatureCategory,
+            Scope: scopeOid
+        });
 
-		const epicTypeIniative = await v1.create('Epic', {
-			Name: 'ValveEpic Initiative',
-			Category: initiativeCategory,
-			Scope: scopeOid
-		});
+        const epicTypeIniative = await v1.create('Epic', {
+            Name: 'ValveEpic Initiative',
+            Category: initiativeCategory,
+            Scope: scopeOid
+        });
 
         await Promise.all(
             doneStories.slice(0, 5).map(story => v1.update(dropMoment(story.id), {
