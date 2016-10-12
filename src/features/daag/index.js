@@ -4,11 +4,6 @@ const times = require('./../utils/times');
 
 const DONE_STORY_STATUS = 'StoryStatus:135';
 
-const getScheme = async (v1, schemeValues) => v1.create('Scheme', {
-    Name: 'ValveScheme',
-    SelectedValues: schemeValues
-});
-
 const getScope = async (v1, name, schemeOid) => v1
     .query({
         from: 'Scope', select: ['Name'], where: { Name: name }
@@ -89,9 +84,12 @@ module.exports = class Daag extends Runner {
             DONE_STORY_STATUS
         ];
 
-        const scheme = await getScheme(v1, schemeValues);
-        const schemeOid = dropMoment(scheme.id);
-        const scopeOid = await getScope(v1, 'ValveScope FINAL', schemeOid);
+        const schemeOid = await v1.create('Scheme', {
+            Name: 'ValveScheme',
+            SelectedValues: schemeValues
+        }).then(scheme => dropMoment(scheme.id));
+
+        const scopeOid = await getScope(v1, 'ValveScope', schemeOid);
 
         const doneStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
         const doneChangeSets = await Promise.all(
