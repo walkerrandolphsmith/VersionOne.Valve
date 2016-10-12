@@ -31,6 +31,15 @@ Creating new features can be as easy as running:
 ./node_modules/.bin/gulp template --name <feature-name>
 ```
 
+## Update Env Vars
+
+You can manually edit the `.env` file, however there is also a task that
+will update only the key value pair you want updated.
+
+```
+./node_modules/.bin/gulp set --k V1Port --val 3001
+```
+
 ## Manual Setup
 
 `npm run boot` does two things:
