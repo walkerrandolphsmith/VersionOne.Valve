@@ -1,6 +1,6 @@
 import dropMoment from './../../../common/dropMoment';
 import times from './../../../common/times';
-import { DONE_STORY_STATUS } from './../../../common/constants';
+import { ROOT_SCOPE, DONE_STORY_STATUS } from './../../../common/constants';
 
 export const getScope = async(v1, name, schemeOid) => v1
     .query({
@@ -9,7 +9,7 @@ export const getScope = async(v1, name, schemeOid) => v1
             ? results[0][0]._oid
             : v1.create('Scope', {
             Name: name,
-            Parent: 'Scope:0',
+            Parent: ROOT_SCOPE,
             Scheme: schemeOid,
             BeginDate: '2016-06-28'
         }).then(scope => dropMoment(scope.id))

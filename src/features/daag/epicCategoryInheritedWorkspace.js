@@ -1,6 +1,6 @@
 import Runner from './../../runner';
 import dropMoment from './../../common/dropMoment';
-import { DONE_STORY_STATUS, OID_NULL } from './../../common/constants';
+import { ROOT_SCOPE, DONE_STORY_STATUS, OID_NULL } from './../../common/constants';
 import {
     getPhase,
     getEpicCategories,
@@ -48,7 +48,7 @@ module.exports = class Daag extends Runner {
 
         const scopeGrandParentOid = await v1.create('Scope', {
             Name: 'Valve Grand Parent Scope',
-            Parent: 'Scope:0',
+            Parent: ROOT_SCOPE,
             Scheme: schemeOid,
             BeginDate: '2016-06-28'
         }).then(scope => dropMoment(scope.id));
