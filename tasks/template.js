@@ -27,7 +27,12 @@ gulp.task('template', ['build'], function() {
     const contents = `const Runner = require('./../../runner');
 
 module.exports = class ${name} extends Runner {
-    command() {
+    async command() {
+        /*
+        *
+        * This function must return a Promise!
+        *
+        */
         return new Promise((resolve, reject) => {
             const v1 = this.authenticateAs('admin', 'admin');
 
@@ -45,7 +50,6 @@ module.exports = class ${name} extends Runner {
                 }).catch((err) => {
                     reject('error talking with V1');
                 });
-
             resolve(results);
         });
     }
