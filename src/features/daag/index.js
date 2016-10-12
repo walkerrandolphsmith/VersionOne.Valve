@@ -52,9 +52,6 @@ const createChangeSet = async (v1, workitemOids) => v1
         PrimaryWorkitems: workitemOids
     });
 
-const createRougeChangeSets = async (v1) => v1
-    .create('ChangeSet', { Name: 'ChangeSet' });
-
 const createBundle = async (v1, phaseOid, packageId, changeSetOids) => v1
     .create('Bundle', {
         Name: `ValveBundle ${packageId}`,
@@ -186,7 +183,7 @@ module.exports = class Daag extends Runner {
 
         const rougeStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
         const rougeChangeSets = await Promise.all(
-            rougeStories.map(story => createRougeChangeSets(v1))
+            rougeStories.map(story => v1.create('ChangeSet', { Name: 'ChangeSet' }))
         ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
 
         await createBundle(v1, developmentPhase, ROUGE_PACKAGE, [
