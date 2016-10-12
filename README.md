@@ -2,16 +2,12 @@
 
 Node application to pump data into a VersionOne instance.
 
-- [Setup](#install)
+- [Setup](#setup)
 - [Running](#run)
 - [New Features](#new-features)
 - [Manual Setup](#manual-setup)
 - [Contributors](#contributors)
-
-## Issues
-
-Include `closes`, `fixes`, or `resolves` in a commit message to close the issue.
-For example `git commit -m "This closes #34, and closes #23"`
+- [Issues](#issues)
 
 ## Setup
 Clone the repo and run `npm run boot` within the directory.
@@ -73,3 +69,8 @@ V1Host=www14.v1host.com
 V1Instance=v1sdktesting
 V1AccessToken=Bearer 1.jA9m1Of4OUnAx/SCuOIGyE8DiCo=
 ```
+
+## Issues
+
+Include `closes`, `fixes`, or `resolves` in a commit message to close the issue.
+For example `git commit -m "This closes #34, and closes #23"`
