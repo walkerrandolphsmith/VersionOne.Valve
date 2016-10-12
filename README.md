@@ -7,8 +7,29 @@ Node app to pump data into a VersionOne instance
 Include `closes`, `fixes`, or `resolves` in a commit message to close the issue.
 For example `git commit -m "This closes #34, and closes #23"`
 
-##Development
+##Getting Started
+Clone the repo and run `npm run boot` within the directory.
+On windows you may need to run terminal as admin.
 
+Thats it. If you want more control you can check out Manual Setup at bottom.
+
+### Run
+Run a valve file (populate a feature)
+```
+./node_modules/.bin/gulp run --name <dir-name>/index.js
+```
+
+### New Features
+Valve concentrates on automating features of VersionOne instance as a collection of commands.
+Therefore the directory structure models this by having a `features` directory,
+such that each sub directory is a feature that contains a collection of commands.
+
+Creating new features can be as easy as running:
+```
+./node_modules/.bin/gulp template --name <feature-name>
+```
+
+## Manual Setup
 ### Dependencies
 Start by installing all dependencies:
 ```
@@ -46,26 +67,4 @@ V1Port=443
 V1Host=www14.v1host.com
 V1Instance=v1sdktesting
 V1AccessToken=Bearer 1.jA9m1Of4OUnAx/SCuOIGyE8DiCo=
-```
-
-### New Features
-Valve concentrates on automating features of VersionOne instance as a collection of commands.
-Therefore the directory structure models this by having a `features` directory,
-such that each sub directory is a feature that contains a collection of commands.
-
-Creating new features can be as easy as running:
-```
-gulp template --name <feature-name>
-```
-
-### Run
-Run a collection of commands grouped by feature
-```
-gulp run --name <dir-name>/index.js
-```
-
-### Test
-Run unit tests using the cli.
-```
-npm test
 ```
