@@ -10,5 +10,6 @@ V1Instance=VersionOne.Web
 V1Username=admin
 V1Password=admin`;
     const dir = path.resolve(__dirname, '../');
+    console.log('Creating a .env file with \n' + contents);
     fs.writeFile(`${dir}/.env`, contents);
 });
