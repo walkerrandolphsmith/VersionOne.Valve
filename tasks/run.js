@@ -17,7 +17,8 @@ const options = nopt(knownOpts, shortHands, process.argv, 2);
 
 
 gulp.task('run', ['build'], function() {
-    const { feature, name } = options;
+    const feature = options.feature;
+    const name = options.name;
     const relative = `${feature}/${name || 'index'}.js`;
     const dir = path.resolve(__dirname, '../', 'dist', 'features/', relative);
     console.log('Running ' + relative);

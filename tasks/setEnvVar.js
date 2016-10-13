@@ -16,7 +16,8 @@ const shortHands = {
 const options = nopt(knownOpts, shortHands, process.argv, 2);
 
 gulp.task('set', [], function() {
-    const { key, value } = options;
+    const key = options.key;
+    const value = options.value;
 
     const exp = new RegExp(`${key}=.*`);
     const keyValue = `${key}=${value}`;

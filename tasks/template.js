@@ -16,8 +16,8 @@ const shortHands = {
 const options = nopt(knownOpts, shortHands, process.argv, 2);
 
 gulp.task('template', ['build'], function() {
-    const { feature, name } = options;
-
+    const feature = options.feature;
+    const name = options.name;
     if(!feature) {
         console.log('No feature was provided');
         console.log('gulp template -f my-feature');
