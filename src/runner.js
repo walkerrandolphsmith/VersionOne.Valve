@@ -9,7 +9,7 @@ module.exports = class Runner {
 
         const { url, authenticate } = getV1();
         this.authenticate = authenticate;
-
+        this.rootUrl = url;
         console.info(`==> 💻  Connecting to the VersionOne instance: ${url}`);
     }
 

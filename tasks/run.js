@@ -5,12 +5,14 @@ const nopt = require("nopt");
 
 const knownOpts = {
     "feature": String,
-    "name": String
+    "name": String,
+    "member": String
 };
 
 const shortHands = {
     "f": ["--feature"],
-    "n": ["--name"]
+    "n": ["--name"],
+    "m": ["--member"]
 };
 
 const options = nopt(knownOpts, shortHands, process.argv, 2);
@@ -25,7 +27,7 @@ gulp.task('run', ['build'], function() {
     fs.exists(dir, (exists) => {
         if(exists) {
             const Runner = require(`../dist/features/${relative}`);
-            const runner = new Runner();
+            const runner = new Runner(options);
 
             runner.execute();
         } else {
