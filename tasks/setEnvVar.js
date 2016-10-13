@@ -2,18 +2,9 @@ var gulp = require('gulp');
 const fs = require('fs');
 const path = require('path');
 var nopt = require("nopt");
+const opts = require('./opts');
 
-const knownOpts = {
-    "key": String,
-    "value": String
-};
-
-const shortHands = {
-    "k": ["--key"],
-    "val": ["--value"]
-};
-
-const options = nopt(knownOpts, shortHands, process.argv, 2);
+const options = nopt(opts.knownOpts, opts.shortHands, process.argv, 2);
 
 gulp.task('set', [], function() {
     const key = options.key;

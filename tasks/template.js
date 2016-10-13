@@ -2,18 +2,9 @@ const gulp = require('gulp');
 const fs = require('fs');
 const path = require('path');
 const nopt = require("nopt");
+const opts = require('./opts');
 
-const knownOpts = {
-    "feature": String,
-    "name": String
-};
-
-const shortHands = {
-    "f": ["--feature"],
-    "n": ["--name"]
-};
-
-const options = nopt(knownOpts, shortHands, process.argv, 2);
+const options = nopt(opts.knownOpts, opts.shortHands, process.argv, 2);
 
 gulp.task('template', ['build'], function() {
     const feature = options.feature;
