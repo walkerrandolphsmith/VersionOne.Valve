@@ -48,9 +48,9 @@ will update only the key value pair you want updated.
 
 ## Manual Setup
 
-`npm run boot` does two things
-1. Installs dependencies
-2. Creates a `.env` file with default values
+`npm run boot` does two things  
+1. Installs dependencies  
+2. Creates a `.env` file with default values  
 
 We can does these steps manually as well with the following guide:
 
