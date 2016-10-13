@@ -20,8 +20,8 @@ Run a valve file (populate a feature)
 ```
 ./node_modules/.bin/gulp run -f <feature> -n <name>
 ```
-- `-f` or ``--feature` Name of directory under `./src/features`
-- `-n` or ``--name` Name of file under --feature directory
+- `-f` or `--feature` Name of directory under `./src/features`
+- `-n` or `--name` Name of file under --feature directory
 
 ## New Features
 Valve concentrates on automating features of VersionOne instance as a collection of commands.
@@ -32,8 +32,8 @@ Creating new features can be as easy as running:
 ```
 ./node_modules/.bin/gulp template -f <feature> -n <name>
 ```
-- `-f` or ``--feature` Name of directory created under `./src/features`
-- `-n` or ``--name` Name of file created under --feature directory
+- `-f` or `--feature` Name of directory created under `./src/features`
+- `-n` or `--name` Name of file created under --feature directory
 
 ## Update Env Vars
 
@@ -43,16 +43,16 @@ will update only the key value pair you want updated.
 ```
 ./node_modules/.bin/gulp set -k V1Port -val 3001
 ```
-- `-k` or ``--key` Key
-- `-v` or ``--value` Value
+- `-k` or `--key` Key
+- `-v` or `--value` Value
 
 ## Manual Setup
 
-`npm run boot` does two things:
-1. installs dependencies
+`npm run boot` does two things
+1. Installs dependencies
 2. Creates a `.env` file with default values
 
-We can does these steps manually as well with the following guide.
+We can does these steps manually as well with the following guide:
 
 ### Dependencies
 Start by installing all dependencies:
