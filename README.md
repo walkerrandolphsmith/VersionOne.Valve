@@ -46,6 +46,23 @@ will update only the key value pair you want updated.
 - `-k` or `--key` Key
 - `-v` or `--value` Value
 
+## Directory Structure
+```
+|-- .env                        # env vars used to declare VersionOne instance url
+|-- package.json
+|-- README.md
+|-- src
+|   |-- common                  # constants and fns used by any feature
+|   |-- features                # collection of features
+|   |   |-- daag                
+|   |   |   |-- utils           # constants and fns used by this feature
+|   |   |   |   |-- index.js
+|   |   |   |-- index.js        # default valve file that can be run by cli
+|   |   |   |-- S1234           # valve files that can be run by cli
+|   |   |   |-- S2345           # ...
+|-- tasks                       # cli tasks
+
+```
 ## Manual Setup
 
 `npm run boot` does two things  
