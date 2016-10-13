@@ -5,6 +5,8 @@ Node application to pump data into a VersionOne instance.
 - [Setup](#setup)
 - [Running](#run)
 - [New Features](#new-features)
+- [Update Env Vars](#update-env-vars)
+- [Directory Structure](#directory-structure)
 - [Manual Setup](#manual-setup)
 - [Contributors](#contributors)
 - [Issues](#issues)
