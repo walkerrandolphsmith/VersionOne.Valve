@@ -7,6 +7,7 @@ Node application to pump data into a VersionOne instance.
 - [New Features](#new-features)
 - [Update Env Vars](#update-env-vars)
 - [Directory Structure](#directory-structure)
+- [File Anatomy](#file-anatomy)
 - [Manual Setup](#manual-setup)
 - [Contributors](#contributors)
 - [Issues](#issues)
@@ -65,6 +66,42 @@ will update only the key value pair you want updated.
 |-- tasks                       # cli tasks
 
 ```
+
+## File Anatomy
+```js
+const Runner = require('./../../runner');
+
+module.exports = class ValveRunner extends Runner {
+    constructor(options) {
+       /*
+        * Enrich your feature by providing command line options in ./tasks/opts.js
+        * Example of usage in ./src/features/member/index.js
+        */
+        super(options);
+    }
+
+    /*
+     * Command must be marked as async to use await within its scope
+     */
+    async command() {
+        /*
+         * This function must return a Promise!
+         */
+        return new Promise((resolve, reject) => {
+            const v1 = this.authenticateAs('admin', 'admin');
+
+            const story = await v1.create('Story', {
+                Name: 'Story',
+                Scope: 'Scope:0'
+            });
+            resolve(story);
+        });
+    }
+};`
+
+```
+
+
 ## Manual Setup
 
 `npm run boot` does two things  
