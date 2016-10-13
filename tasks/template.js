@@ -21,6 +21,20 @@ gulp.task('template', ['build'], function() {
     const newContents = `const Runner = require('./../../runner');
 
 module.exports = class ValveRunner extends Runner {
+    constructor(options) {
+        super(options);
+        /*
+         *
+         * Options are passed in from the command line.
+         * Enrich your feature by providing command line options in ./tasks/opts.js
+         * Example of usage in ./src/features/member/index.js
+         *
+         */
+    }
+
+    /*
+     * Command must be marked as async to use await within its scope
+     */
     async command() {
         /*
         *
