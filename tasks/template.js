@@ -1,30 +1,33 @@
 const gulp = require('gulp');
 const fs = require('fs');
 const path = require('path');
-const minimist = require('minimist');
+const nopt = require("nopt");
 
-var knownOptions = {
-    string: 'name',
-    default: { name: process.env.NAME }
+const knownOpts = {
+    "feature": String,
+    "name": String
 };
 
-var options = minimist(process.argv.slice(2), knownOptions);
+const shortHands = {
+    "f": ["--feature"],
+    "n": ["--name"]
+};
 
+const options = nopt(knownOpts, shortHands, process.argv, 2);
 
 gulp.task('template', ['build'], function() {
-    const name = options.name;
+    const { feature, name } = options;
 
-    if(!name) {
-        console.log('Please provide a name for the feature...');
-        console.log('Doing nothing.');
+    if(!feature) {
+        console.log('No feature was provided');
+        console.log('gulp template -f my-feature');
         return;
     }
 
-    const dir = path.resolve(__dirname, '../', 'src', 'features', name);
-    const fileName = `${dir}/index.js`;
+    const dir = path.resolve(__dirname, '../', 'src', 'features', feature);
+    const fileName = `${dir}/${name || 'index'}.js`;
 
-
-    const contents = `const Runner = require('./../../runner');
+    const newContents = `const Runner = require('./../../runner');
 
 module.exports = class ValveRunner extends Runner {
     async command() {
@@ -57,8 +60,13 @@ module.exports = class ValveRunner extends Runner {
 
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
-        fs.writeFile(fileName, contents);
-    } else {
-        fs.writeFile(fileName, contents);
     }
+
+    fs.readFile(fileName, 'utf8', (err, contents) => {
+        if(err) {
+            fs.writeFile(fileName, newContents);
+        } else {
+            console.log('A feature with that name already exists.');
+        }
+    })
 });

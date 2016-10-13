@@ -1,27 +1,34 @@
 const gulp = require('gulp');
 const fs = require('fs');
 const path = require('path');
-const minimist = require('minimist');
+const nopt = require("nopt");
 
-const knownOptions = {
-    string: 'name',
-    default: { name: process.env.NAME }
+const knownOpts = {
+    "feature": String,
+    "name": String
 };
 
-const options = minimist(process.argv.slice(2), knownOptions);
+const shortHands = {
+    "f": ["--feature"],
+    "n": ["--name"]
+};
+
+const options = nopt(knownOpts, shortHands, process.argv, 2);
 
 
 gulp.task('run', ['build'], function() {
-    const name = options.name;
-    const absolutePath = path.resolve(__dirname, '../', 'dist', 'features/', name);
-    fs.exists(absolutePath, (exists) => {
+    const { feature, name } = options;
+    const relative = `${feature}/${name || 'index'}.js`;
+    const dir = path.resolve(__dirname, '../', 'dist', 'features/', relative);
+    console.log('Running ' + relative);
+    fs.exists(dir, (exists) => {
         if(exists) {
-            const Runner = require(`../dist/features/${name}`);
+            const Runner = require(`../dist/features/${relative}`);
             const runner = new Runner();
 
             runner.execute();
         } else {
-            console.log(`the file at ${absolutePath} does not exist`);
+            console.log(`Nothing to run, ${dir} does not exist`);
         }
     });
 });

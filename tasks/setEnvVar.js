@@ -1,19 +1,26 @@
 var gulp = require('gulp');
 const fs = require('fs');
 const path = require('path');
-const minimist = require('minimist');
+var nopt = require("nopt");
 
-var knownOptions = {
-    string: 'k',
-    default: { k: process.env.K }
+const knownOpts = {
+    "key": String,
+    "value": String
 };
 
-var options = minimist(process.argv.slice(2), knownOptions);
+const shortHands = {
+    "k": ["--key"],
+    "val": ["--value"]
+};
+
+const options = nopt(knownOpts, shortHands, process.argv, 2);
 
 gulp.task('set', [], function() {
-    const { k, val } = options;
-    const exp = new RegExp(`${k}=.*`);
-    const keyValue = `${k}=${val}`;
+    const { key, value } = options;
+
+    const exp = new RegExp(`${key}=.*`);
+    const keyValue = `${key}=${value}`;
+
     const dir = path.resolve(__dirname, '../');
     const fileName = `${dir}/.env`;
 

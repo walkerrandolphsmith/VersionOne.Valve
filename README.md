@@ -13,13 +13,15 @@ Node application to pump data into a VersionOne instance.
 Clone the repo and run `npm run boot` within the directory.
 On windows you may need to run terminal as admin.
 
-Thats it. If you want more control you can check out Manual Setup at bottom.
+That's it. If you want more control you can check out Manual Setup at bottom.
 
 ## Run
 Run a valve file (populate a feature)
 ```
-./node_modules/.bin/gulp run --name <dir-name>/index.js
+./node_modules/.bin/gulp run -f <feature> -n <name>
 ```
+- `-f` or ``--feature` Name of directory under `./src/features`
+- `-n` or ``--name` Name of file under --feature directory
 
 ## New Features
 Valve concentrates on automating features of VersionOne instance as a collection of commands.
@@ -28,8 +30,10 @@ such that each sub directory is a feature that contains a collection of commands
 
 Creating new features can be as easy as running:
 ```
-./node_modules/.bin/gulp template --name <feature-name>
+./node_modules/.bin/gulp template -f <feature> -n <name>
 ```
+- `-f` or ``--feature` Name of directory created under `./src/features`
+- `-n` or ``--name` Name of file created under --feature directory
 
 ## Update Env Vars
 
@@ -37,8 +41,10 @@ You can manually edit the `.env` file, however there is also a task that
 will update only the key value pair you want updated.
 
 ```
-./node_modules/.bin/gulp set --k V1Port --val 3001
+./node_modules/.bin/gulp set -k V1Port -val 3001
 ```
+- `-k` or ``--key` Key
+- `-v` or ``--value` Value
 
 ## Manual Setup
 
