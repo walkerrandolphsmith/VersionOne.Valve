@@ -145,4 +145,7 @@ V1AccessToken=Bearer 1.jA9m1Of4OUnAx/SCuOIGyE8DiCo=
 
 Issues can be found [on github issues](https://github.com/walkerrandolphsmith/VersionOne.Valve/issues)  
 Include `closes`, `fixes`, or `resolves` in a commit message to close the issue.
-For example `git commit -m "This closes #34, and closes #23"`
+For example 
+```
+git commit -m "This closes #34, and closes #23"
+```
