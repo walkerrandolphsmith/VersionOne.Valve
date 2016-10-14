@@ -1,15 +1,17 @@
 "use strict"
 
-function logMsg(msg) {
-  console.log(msg)
-}
-
 
 class Throttler {
   next = 0;
   results = [];
+  verbose = false;
   addResult(result) {
     this.results.push(result);
+  }
+
+  logMsg(msg) {
+    if (this.verbose)
+      console.log(msg)
   }
 
   getNext() {
@@ -19,63 +21,54 @@ class Throttler {
   async runNextPromise(promises) {
     const next = this.getNext();
     if (next < promises.length) {
-      logMsg(`\t\trunning next ${next}`)
-      var ret = await promises[next]().then(async (result) => { await this.runNextPromise(promises); return result; } );
-      logMsg(`\t\treturning ${ret}`);
-      this.addResult(ret);
-      return ret;
+      this.logMsg(`\t\trunning next promise: ${next}`)
+      try {
+        var ret = await promises[next]().then(async (result) => { await this.runNextPromise(promises); return result; });
+        this.logMsg(`\t\treturning ${ret}`);
+        this.addResult(ret);
+        return ret;
+      }
+      catch (error) {
+        console.log("Error in runNext: "+error)
+        throw error
+      }
     }
     else {
-      logMsg("\t\tending leaf promise")
+      this.logMsg("\t\tending leaf promise")
     }
   }
 
-  async runThrottledPromises(promises, throttle) {
+  async runThrottledPromises(promises, throttle, verbose = false) {
+    if (typeof promises === 'undefined' || promises === null || promises.length === 0)
+      throw "Promises must be an array with something in it."
+    if (typeof throttle === 'undefined' || throttle < 1)
+      throw "Throttle must be greater than zero."
+
     try {
+      this.verbose = verbose;
+      this.logMsg(`Throttler running ${promises.length} promises, ${throttle} at a time`);
+
       this.next = throttle;
       const ret = await Promise.all(
         promises.slice(0, throttle).map(
           (p) => p().then(async (result) => { await this.runNextPromise(promises); return result; })
         )
       );
-      logMsg(`ret is ${ret}`)
+      this.logMsg(`ret is ${ret}`)
       return ret.concat(this.results);
     }
     catch (error) {
-      logMsg("Error" + error);
+      console.log("Error in runThrottledPromises: " + error);
+      throw error;
     }
   }
 }
 
-
-/////////////////// Test
-
-var promises = [];
-
-async function getValue(i) {
-  var sleepy = Math.round(2 * Math.random());
-  logMsg(`\t\t\t>> ${i} then sleep for ${sleepy}`);
-
-  await new Promise((resolve, reject) => {
-    setTimeout(() => { resolve() }, 1000 * sleepy)
-  });
-
-  logMsg(`\t\t\t<< ${i}`);
-  return 100 * i;
-}
-
-// populate list
-try {
-
-  for (var i = 0; i < 10; i++) {
-    var f = getValue.bind(getValue, i)
-    promises.push(f)
+export async function runThrottledPromises(promises, throttle, verbose = false) {
+  try {
+    return await new Throttler().runThrottledPromises(promises, throttle, verbose)
+  }
+  catch (error) {
+    throw (error);
   }
 }
-catch (error) {
-  logMsg("Error" + error);
-}
-
-var throttler = new Throttler();
-throttler.runThrottledPromises(promises, 5).then((result) => { logMsg(`In THEN with ${result}, ${result.length}`) });
-
