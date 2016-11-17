@@ -33,6 +33,7 @@ module.exports = class Runner {
             this.stop();
         }).catch(error => {
             console.log('Something went wrong... For more details use try catch in your feature. Details: ', error);
+			console.log(error.stack);
             this.stop();
         })
     }
