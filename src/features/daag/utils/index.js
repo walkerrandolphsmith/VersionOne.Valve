@@ -79,3 +79,34 @@ export const createStoriesForScope = async (v1, scopeOid, epicCategory, phase) =
         ...changeSets
     ]);
 };
+
+export const createSpreadWorkitem = async () => {
+    const MIXED__PACKAGE = 'Mixed spread and non-spread workitem in package';
+    const nonSpreadWorkitem = await createStory(v1, scopeOid)
+        .then(s=> dropMoment(s.id));
+    const nonSpreadChangeSet = await createChangeSet(v1, [nonSpreadWorkitem])
+        .then(cs => dropMoment(cs.id));
+
+    const spreadWorkitemWithMoment = await createStory(v1, scopeOid)
+        .then(s=> s.id);
+
+    const spreadWorkitem = dropMoment(spreadWorkitemWithMoment);
+
+    const spreadChangeSets = await Promise.all(
+        times(6).map(i => createChangeSet(v1, [spreadWorkitem]))
+    ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+
+    await createBundle(v1, developmentPhase, MIXED__PACKAGE, [
+        spreadChangeSets[0], spreadChangeSets[1]
+    ]);
+
+    await createBundle(v1, testingPhase, MIXED__PACKAGE, [
+        spreadChangeSets[2], spreadChangeSets[3], nonSpreadChangeSet
+    ]);
+
+    await createBundle(v1, productionPhase, MIXED__PACKAGE, [
+        spreadChangeSets[4], spreadChangeSets[5]
+    ]);
+
+    return spreadWorkitemWithMoment;
+};
