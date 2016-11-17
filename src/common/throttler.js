@@ -64,7 +64,7 @@ class Throttler {
   }
 }
 
-export async function runThrottledPromises(promises, throttle, verbose = false) {
+export default async function runThrottledPromises(promises, throttle = 0, verbose = false) {
   try {
     return await new Throttler().runThrottledPromises(promises, throttle, verbose)
   }
