@@ -9,7 +9,7 @@ import {
     createStory
 } from './utils';
 
-const SCOPE_NAME = 'LopsScope';
+const SCOPE_NAME = '100 Item Scope 2';
 
 module.exports = class ValveRunner extends Runner {
     async command() {
@@ -38,8 +38,12 @@ module.exports = class ValveRunner extends Runner {
         );
 
         await epics.map(epic => Promise.all(
-            times(1000).map(async (i) => await createStory(v1, scopeOid, dropMoment(epic.id)))
-        ));
+            times(100).map(async (i) => await v1.create('Story', {
+				Name: 'Story ' + i,
+				Scope: scopeOid,
+				Super: dropMoment(epic.id)
+			})
+        )));
 
         return Promise.resolve();
     }

@@ -7,10 +7,13 @@ import {
     getPhase,
     getEpicCategories,
     createStory,
-    createChangeSet
+    createDoneStory,
+    createChangeSet,
+    createBundle
 } from './utils';
 
-const SCOPE_NAME = 'ValveScope 100 for one 10 for the rest';
+const SCOPE_NAME = 'LOE SPREAD Scope 4';
+
 
 module.exports = class ValveRunner extends Runner {
     async command() {
@@ -37,13 +40,48 @@ module.exports = class ValveRunner extends Runner {
         }).then(scheme => dropMoment(scheme.id));
 
         const scopeOid = await getScope(v1, SCOPE_NAME, schemeOid);
-
+		
+		/*--------------------------------------------------------------------------------------------*/
+        /*---------------------- SPREAD AND UNSPREAD WORKITEM BUNDLE ---------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
-        /*---------------------------------- Create tons of epics ------------------------------------*/
-        /*--------------------------------------------------------------------------------------------*/
+        console.log('SPREAD & UNSPREAD WORKITEM BUNDLE');
+		
+		const createSpreadWorkitem = async () => {
+			const MIXED__PACKAGE = 'Mixed spread and non-spread workitem in package';
+			const nonSpreadWorkitem = await createStory(v1, scopeOid)
+											.then(s=> dropMoment(s.id));
+			const nonSpreadChangeSet = await createChangeSet(v1, [nonSpreadWorkitem])
+												.then(cs => dropMoment(cs.id))
+			
+			const spreadWorkitemWithMoment = await createStory(v1, scopeOid)
+														.then(s=> s.id);
 
+			const spreadWorkitem = dropMoment(spreadWorkitemWithMoment);
 
-        let loeEpics = [];
+			const spreadChangeSets = await Promise.all(
+				times(6).map(i => createChangeSet(v1, [spreadWorkitem]))
+			).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+
+			await createBundle(v1, developmentPhase, MIXED__PACKAGE, [
+				spreadChangeSets[0], spreadChangeSets[1]
+			]);
+
+			await createBundle(v1, testingPhase, MIXED__PACKAGE, [
+				spreadChangeSets[2], spreadChangeSets[3], nonSpreadChangeSet
+			]);
+
+			await createBundle(v1, productionPhase, MIXED__PACKAGE, [
+				spreadChangeSets[4], spreadChangeSets[5]
+			]);
+			
+			return spreadWorkitemWithMoment;
+		}
+
+        
+		
+		
+		
+		let loeEpics = [];
 		let epicCount = 0;
         while (loeEpics.length < 300) {
 			let result = await v1.create('Epic', {
@@ -57,24 +95,22 @@ module.exports = class ValveRunner extends Runner {
         console.log('creating stories on epics');
         var once = false; 
         while (loeEpics.length > 0) {
-            console.log("epics remaining: ", loeEpics.length);
-            await Promise.all(loeEpics.slice(0, 2).map(async(epic) => {
-	        const numberOfItems = once ? 10 : 100;
-		once = true;
-                const loeStories = await Promise.all(times(numberOfItems).map(i => createStory(v1, scopeOid)));
-                const loeChangeSets = await Promise.all(
-                    loeStories.map(story => createChangeSet(v1, [dropMoment(story.id)]))
-                ).then(changeSets => changeSets.map(changeSet => dropMoment(changeSet.id)));
+			console.log("epics remaining: ", loeEpics.length);
+			await Promise.all(loeEpics.slice(0, 2).map(async(epic) => {
+				const numberOfItems = once ? 10 : 100;
+				once = true;
+				await Promise.all(times(30).map(async (i)=> {
+						let swi = await createSpreadWorkitem();
+						return v1.update(swi, {
+							 Super: dropMoment(epic.id)
+						})
+					}
+				));
 
-                return Promise.all(
-                    loeStories.map(story => v1.update(dropMoment(story.id), {
-                        Super: dropMoment(epic.id)
-                    }))
-                )
             }));
 
             loeEpics.splice(0, 2);
-        }
+		}
 
         return Promise.resolve();
     }
