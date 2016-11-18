@@ -80,7 +80,7 @@ export const createStoriesForScope = async (v1, scopeOid, epicCategory, phase) =
     ]);
 };
 
-export const createSpreadWorkitem = async () => {
+export const createSpreadWorkitem = async (v1, scopeOid, developmentPhase, testingPhase, productionPhase) => {
     const MIXED__PACKAGE = 'Mixed spread and non-spread workitem in package';
     const nonSpreadWorkitem = await createStory(v1, scopeOid)
         .then(s=> dropMoment(s.id));

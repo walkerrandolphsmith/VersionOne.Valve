@@ -14,7 +14,7 @@ import {
 /*------------------------------ WHAT DO YOU WANT TO CREATE? ---------------------------------*/
 /*--------------------------------------------------------------------------------------------*/
 
-const SCOPE_NAME = 'LOE SPREAD Scope - Throttler3';
+const SCOPE_NAME = 'LOE SPREAD Scope - Throttler1';
 const NUM_OF_EPICS = 200;
 const EPICS_AT_A_TIME = 5;
 const NUM_OF_STORIES = 10;
@@ -64,7 +64,7 @@ module.exports = class ValveRunner extends Runner {
 
 		const storyPromises = loeEpics.map((epic)=>{
 			return () => Promise.all(times(NUM_OF_STORIES).map(async (i)=> {
-					let swi = await createSpreadWorkitem();
+					let swi = await createSpreadWorkitem(v1, scopeOid, developmentPhase, testingPhase, productionPhase);
 					return v1.update(swi, {
 						Super: dropMoment(epic.id)
 					})
