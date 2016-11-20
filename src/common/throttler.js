@@ -1,6 +1,3 @@
-"use strict"
-
-
 class Throttler {
   next = 0;
   results = [];

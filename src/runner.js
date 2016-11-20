@@ -1,5 +1,6 @@
 const Spinner = require('cli-spinner').Spinner;
 const getV1 = require('./v1');
+const chalk = require('chalk');
 
 module.exports = class Runner {
     constructor() {
@@ -23,8 +24,9 @@ module.exports = class Runner {
     }
 
     stop() {
-        console.log(`Finished running commands in ${Date.now() - this.startTime} ms!`);
+        const endTime = Date.now() - this.startTime;
         this.spinner.stop();
+        console.log(chalk.bold.cyan(`\nFinished running commands in ${endTime} ms!`));
     }
 
     execute() {
@@ -32,8 +34,8 @@ module.exports = class Runner {
         return this.command().then(() => {
             this.stop();
         }).catch(error => {
-            console.log('Something went wrong... For more details use try catch in your feature. Details: ', error);
-			console.log(error.stack);
+            console.log(chalk.bold.red('Something went wrong... For more details use try catch in your feature. Details: '), error);
+            console.log(error.stack);
             this.stop();
         })
     }

@@ -2,6 +2,7 @@
 
 Node application to pump data into a VersionOne instance.
 
+- [Global Install](#global-install-coming-soon)
 - [Setup](#setup)
 - [Running](#run)
 - [New Features](#new-features)
@@ -12,6 +13,12 @@ Node application to pump data into a VersionOne instance.
 - [Contributors](#contributors)
 - [Issues](#issues)
 
+## Global install coming soon
+When published as a npm package it can be globally installed using
+`npm i -g` and will have some added benefits.
+1) Run from any directory on your command line!
+2) Forget about paths like `./node_modules/.bin/gulp` or `./bin/index.js` just type `valve <command> <options>`
+
 ## Setup
 Clone the repo and run `npm run boot` within the directory.
 On windows you may need to run terminal as admin.
@@ -21,10 +28,8 @@ That's it. If you want more control you can check out Manual Setup at bottom.
 ## Run
 Run a valve file (populate a feature)
 ```
-./node_modules/.bin/gulp run -f <feature> -n <name>
+./bin/index.js run ./src/features/daag/index.js
 ```
-- `-f` or `--feature` Name of directory under `./src/features`
-- `-n` or `--name` Name of file under --feature directory
 
 ## New Features
 Valve concentrates on automating features of VersionOne instance as a collection of commands.
@@ -33,25 +38,19 @@ such that each sub directory is a feature that contains a collection of commands
 
 Creating new features can be as easy as running:
 ```
-./node_modules/.bin/gulp template -f <feature> -n <name>
+./bin/index.js template -f <feature> -n <name>
 ```
 - `-f` or `--feature` Name of directory created under `./src/features`
 - `-n` or `--name` Name of file created under --feature directory
 
-## Update Env Vars
-
-You can manually edit the `.env` file, however there is also a task that
-will update only the key value pair you want updated.
-
-```
-./node_modules/.bin/gulp set -k V1Port -val 3001
-```
-- `-k` or `--key` Key
-- `-v` or `--value` Value
-
 ## Directory Structure
 ```
 |-- .env                        # env vars used to declare VersionOne instance url
+|-- valvefile
+|-- bin
+|   |--index                    # entry point to running commands
+|   |--options                  # define the known command line flags
+|   |--commands                 # commands that can be run
 |-- package.json
 |-- README.md
 |-- src
@@ -63,21 +62,25 @@ will update only the key value pair you want updated.
 |   |   |   |-- index.js        # default valve file that can be run by cli
 |   |   |   |-- S1234           # valve files that can be run by cli
 |   |   |   |-- S2345           # ...
-|-- tasks                       # cli tasks
 
 ```
 
 ## File Anatomy
 ```js
+import throttler from './../../common/throttler';
+import times from './../../common/times';
 const Runner = require('./../../runner');
 
 module.exports = class ValveRunner extends Runner {
     constructor(options) {
-       /*
-        * Enrich your feature by providing command line options in ./tasks/opts.js
-        * Example of usage in ./src/features/member/index.js
-        */
         super(options);
+        /*
+         *
+         * Options are passed in from the command line.
+         * Enrich your feature by providing command line options
+         * Example of usage in ./src/features/member/index.js
+         *
+         */
     }
 
     /*
@@ -85,20 +88,53 @@ module.exports = class ValveRunner extends Runner {
      */
     async command() {
         /*
-         * This function must return a Promise!
-         */
+        *
+        * This function must return a Promise!
+        *
+        */
         return new Promise((resolve, reject) => {
+            /*
+            *
+            * Get a reference to the V1 SDK as a user
+            *
+            */
             const v1 = this.authenticateAs('admin', 'admin');
 
-            const story = await v1.create('Story', {
-                Name: 'Story',
-                Scope: 'Scope:0'
-            });
-            resolve(story);
+            /*
+            *
+            * Visit the V1 SDK [docs](https://github.com/versionone/VersionOne.SDK.JavaScript) for more about using the SDK
+            *
+            *
+            */
+            const results = v1.query({
+                    from: 'PrimaryWorkitem',
+                    select: [
+                        'Name'
+                    ],
+                    where: {
+                        ID: 'Story:8546'
+                    }
+                })
+                .then(response => {
+                    //axios stores the results you want in response.data
+                    console.log(response.data);
+                }).catch((err) => {
+                    reject('error talking with V1');
+                });
+
+            /*
+            *
+            * Only so many HTTP requests can be handled by IIS/Web server at once so throttle them!
+            *
+            */
+            const promisesInFlight = 25;
+            const promises = times(1000).map(i => () => Promise.resolve(i));
+            const resolvedValues = await throttler(promises, promisesInFlight);
+
+            resolve(resolvedValues);
         });
     }
-};`
-
+};
 ```
 
 
