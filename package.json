@@ -9,7 +9,8 @@
   "scripts": {
     "boot": "npm i && gulp",
     "start": "gulp dev",
-    "build": "gulp build"
+    "build": "gulp build",
+    "docs": "NODE_ENV=production gulp build"
   },
   "repository": {
     "type": "git",

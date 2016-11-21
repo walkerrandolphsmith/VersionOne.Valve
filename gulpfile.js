@@ -43,7 +43,7 @@ const config = {
         dest: `${dest}/css`
     },
     url: process.env.NODE_ENV === 'production'
-        ? 'http://www.github.com/walkerrandolphsmith/VersionOne.Valve' : 'http://localhost:3000'
+        ? 'http://walkerrandolphsmith.github.io/VersionOne.Valve' : 'http://localhost:3000'
 };
 
 const templatePath = `${src}/templates`;
