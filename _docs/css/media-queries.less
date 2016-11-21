@@ -1,0 +1,130 @@
+@media (max-width: 420px) {
+  .drawer {
+    width: 325px;
+
+    p {
+      word-wrap: break-word;
+      word-break: break-word;
+      max-width: 325px;
+    }
+  }
+}
+
+@media (max-width: 490px) {
+  .hero {
+    .post-item {
+      h2 {
+        margin: 30px 0;
+        font-size: 32px;
+        line-height: 46px;
+      }
+
+      .excerpt {
+        margin: 30px 0;
+        font-size: 17px;
+        line-height: 28px;
+      }
+    }
+  }
+
+  footer.main {
+    flex-direction: column;
+    .made-by {
+      text-align: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    ul.social {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .hero {
+    .name {
+      font-size: 30px;
+      line-height: 32px;
+    }
+    .post-title.center {
+      width: 85%;
+      vertical-align: bottom;
+
+      .excerpt {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+  }
+
+  footer.post-info .default .post-more-content-shortcut {
+    .info {
+      align-items: baseline;
+    }
+    #comment, #share {
+      i {
+        font-size: 2em;
+      }
+      span {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 630px) {
+  .post-bottom {
+    text-align: center;
+    .share-options {
+      .permalink {
+        display: none;
+      }
+      .share-buttons {
+        padding-left: 40px;
+        padding-top: 20px;
+        margin: auto 0px;
+        float: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 880px) {
+  header.blog-info nav.main > ul:first-child {
+    display: none;
+  }
+
+  .hero {
+
+    .post-title.center h1,
+    .post-title.center .excerpt {
+      text-align: center;
+    }
+  }
+
+  #resume {
+    padding: 90px 50px;
+
+    & > header {
+      & > div:first-child .fa {
+        padding-left: 0;
+      }
+      .avatar {
+        align-items: center;
+
+        img {
+          width: 75px;
+          height: 75px;
+        }
+      }
+    }
+
+    .flexbox-container {
+      flex-direction: column;
+
+      & > div {
+        width: 100% !important;
+      }
+    }
+  }
+}

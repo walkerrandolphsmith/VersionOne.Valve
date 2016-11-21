@@ -1,0 +1,12 @@
+<section class="hero">
+    <div class="background"></div>
+    <header class="blog-info transparent">
+        <div class="title">
+            <a href="{{baseUrl}}">VersionOne.Valve</a>
+        </div>
+        {{> nav}}
+    </header>
+    <section class="post-item post-title center wrapper">
+        <h1 class="title">VersionOne.Valve</h1>
+    </section>
+</section>

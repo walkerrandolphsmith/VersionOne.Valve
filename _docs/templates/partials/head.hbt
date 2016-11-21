@@ -1,0 +1,13 @@
+<title>{{this.site.title}}</title>
+<meta name="description" content="VersionOne.Valve documnetation" />
+<meta name="author" content="VersionOne.Valve" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<link rel="icon" type="image/png" href="{{baseUrl}}/css/images/profile.png" />
+<link rel="apple-touch-icon" sizes="57x57" href="{{baseUrl}}/css/images/apple-icon-57x57.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="{{baseUrl}}/css/images/apple-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="{{baseUrl}}/css/images/apple-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="{{baseUrl}}/css/images/apple-icon-144x144.png" />

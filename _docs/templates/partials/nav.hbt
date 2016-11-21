@@ -1,0 +1,5 @@
+<nav class="main light">
+    <ul>
+        <li class="nav-home" role="presentation"><a href="{{baseUrl}}">Home</a></li>
+    </ul>
+</nav>

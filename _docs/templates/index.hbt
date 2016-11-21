@@ -1,0 +1,27 @@
+{{> header}}
+    {{> hero}}
+     <section id="article">
+        <article class="post-contents">
+        <h1>{{this.title}}</h1>
+        {{{contents}}}
+        </article>
+        <div class="aside-wrapper">
+            <aside class="natural">
+                  <section id="toc">
+                      <header>
+                      <h3>In this Article</h3>
+                      <i class="fa fa-plus expander"></i>
+                      </header>
+                      <ul>
+                      {{#each this.toc}}
+                          <li>
+                             <a href="{{baseURL}}/{{this.title}}#{{this.slug}}">{{this.text}}</a>
+                          </li>
+                      {{/each}}
+                      </ul>
+                  </section>
+            </aside>
+        </div>
+    </section>
+    </section>
+{{> footer}}

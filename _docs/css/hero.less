@@ -1,0 +1,67 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: 25vh;
+  background: @gunmetal;
+  display: table;
+  overflow: hidden;
+
+  .background {
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    background-size: cover;
+    background-position: center;
+    transform: translate3d(0, 0, 0);
+  }
+  .post-item {
+    padding: 90px 0;
+  }
+
+  .post-title {
+    position: relative;
+
+    &:after {
+      display: block;
+      content: '';
+      clear: both;
+      height: 4px;
+      width: 15%;
+      background: @darkerGray;
+    }
+
+    &.center {
+      vertical-align: middle;
+      width: 700px;
+    }
+
+    .meta {
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    h1 {
+      color: @paper;
+      margin: 35px 0;
+      font-family: "Varela Round","Arial",Sans-Serif;
+    }
+
+    .excerpt {
+      margin: 35px 0;
+      font-family: "Varela Round","Arial",Sans-Serif;
+      font-size: 24px;
+      line-height: 38px;
+      color: @gray;
+      letter-spacing: -1px;
+      overflow: hidden;
+    }
+
+    .author {
+      display: none;
+    }
+  }
+}
