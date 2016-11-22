@@ -8,8 +8,6 @@ const LessAutoprefix    = require('less-plugin-autoprefix');
 const cleanCSS          = require('gulp-clean-css');
 const browserSync       = require("browser-sync");
 //Metalsmith deps
-const fs                = require('fs');
-const path              = require('path');
 const Handlebars        = require('handlebars');
 const Metalsmith        = require('metalsmith');
 const collections       = require('metalsmith-collections');
@@ -28,6 +26,7 @@ const dest = './docs';
 const config = {
     src: src,
     dest: dest,
+    templates: `${src}/templates`,
     styles: {
         src: `${src}/css/index.less`,
         glob: `${src}/css/**/*.less`,
@@ -46,15 +45,6 @@ const config = {
         ? 'http://walkerrandolphsmith.com/VersionOne.Valve/' : 'http://localhost:3000'
 };
 
-const templatePath = `${src}/templates`;
-const partialPath = `${templatePath}/partials`;
-
-Handlebars.registerPartial({
-    head: fs.readFileSync(`${partialPath}/head.hbt`).toString(),
-    header: fs.readFileSync(`${partialPath}/header.hbt`).toString(),
-    footer: fs.readFileSync(`${partialPath}/footer.hbt`).toString(),
-    nav: fs.readFileSync(`${partialPath}/nav.hbt`).toString()
-});
 Handlebars.registerHelper('baseUrl', () => config.url);
 Handlebars.registerHelper('collectionNav', context => new Handlebars.SafeString(
     Object
@@ -97,7 +87,7 @@ gulp.task('metalsmith', () => {
         return `<h${level}><a name="${t}" class="anchor" href="#${t}"></a>${text}</h${level}>`;
     };
 
-    const getTocPlugin = function (opts) {
+    const toc = function (opts) {
         const options = opts || {};
         options.selector = options.selector || 'h2, h3, h4, h5, h6';
         options.headerIdPrefix = options.headerIdPrefix || '';
@@ -168,7 +158,7 @@ gulp.task('metalsmith', () => {
                 pattern: 'utilities/*.md'
             }
         }))
-        .use(getTocPlugin())
+        .use(toc())
         .use(markdown({
             gfm: true,
             smartypants: true,
@@ -178,7 +168,7 @@ gulp.task('metalsmith', () => {
         }))
         .use(templates({
             engine: 'handlebars',
-            directory: templatePath
+            directory: config.templates
         }))
         .use(permalinks({pattern: ':title', relative: false}))
         .build(err => {

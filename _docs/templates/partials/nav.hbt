@@ -1,6 +1,0 @@
-<nav class="main light">
-    <ul>
-        <li><a href="{{baseUrl}}" title="Home">Home</a></li>
-        {{collectionNav this}}
-    </ul>
-</nav>
