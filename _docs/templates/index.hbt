@@ -20,7 +20,7 @@
                       <ul>
                       {{#each this.toc}}
                           <li>
-                             <a href="{{baseURL}}/{{this.title}}#{{this.slug}}">{{this.text}}</a>
+                             <a href="{{baseUrl}}/{{this.title}}#{{this.slug}}">{{this.text}}</a>
                           </li>
                       {{/each}}
                       </ul>
