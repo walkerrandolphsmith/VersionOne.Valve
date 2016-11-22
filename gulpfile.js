@@ -53,10 +53,16 @@ Handlebars.registerPartial({
     head: fs.readFileSync(`${partialPath}/head.hbt`).toString(),
     header: fs.readFileSync(`${partialPath}/header.hbt`).toString(),
     footer: fs.readFileSync(`${partialPath}/footer.hbt`).toString(),
-    hero: fs.readFileSync(`${partialPath}/hero.hbt`).toString(),
     nav: fs.readFileSync(`${partialPath}/nav.hbt`).toString()
 });
 Handlebars.registerHelper('baseUrl', () => config.url);
+Handlebars.registerHelper('collectionNav', context => new Handlebars.SafeString(
+    Object
+        .keys(context.collections)
+        .filter(key => key !== 'Home')
+        .map(item => `<li><a href="${config.url}/${item.toLowerCase()}" title="${item}">${item}</a></li>`)
+        .join('')
+));
 Handlebars.registerHelper('dropIndexHtml', url => url.replace('.html', ''));
 
 gulp.task('metalsmith', () => {

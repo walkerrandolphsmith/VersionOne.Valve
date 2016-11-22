@@ -16,8 +16,8 @@ Node application to pump data into a VersionOne instance.
 ## Global install coming soon
 When published as a npm package it can be globally installed using
 `npm i -g` and will have some added benefits.
-1) Run from any directory on your command line!
-2) Forget about paths like `./node_modules/.bin/gulp` or `./bin/index.js` just type `valve <command> <options>`
+1. Run from any directory on your command line!
+2. Forget about paths like `./node_modules/.bin/gulp` or `./bin/index.js` just type `valve <command> <options>`
 
 ## Setup
 Clone the repo and run `npm run boot` within the directory.
@@ -72,15 +72,15 @@ import times from './../../common/times';
 const Runner = require('./../../runner');
 
 module.exports = class ValveRunner extends Runner {
+     /*
+      *
+      * Options are passed in from the command line.
+      * Enrich your feature by providing command line options
+      * Example of usage in ./src/features/member/index.js
+      *
+      */
     constructor(options) {
         super(options);
-        /*
-         *
-         * Options are passed in from the command line.
-         * Enrich your feature by providing command line options
-         * Example of usage in ./src/features/member/index.js
-         *
-         */
     }
 
     /*
@@ -100,12 +100,6 @@ module.exports = class ValveRunner extends Runner {
             */
             const v1 = this.authenticateAs('admin', 'admin');
 
-            /*
-            *
-            * Visit the V1 SDK [docs](https://github.com/versionone/VersionOne.SDK.JavaScript) for more about using the SDK
-            *
-            *
-            */
             const results = v1.query({
                     from: 'PrimaryWorkitem',
                     select: [

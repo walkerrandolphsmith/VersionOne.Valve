@@ -1,5 +1,10 @@
 {{> header}}
-    {{> hero}}
+    <header class="navigation fixed">
+        <div class="title">
+            <a href="{{baseUrl}}">VersionOne.Valve</a>
+        </div>
+        {{> nav}}
+    </header>
      <section id="article">
         <article class="post-contents">
         <h1>{{this.title}}</h1>

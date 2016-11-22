@@ -3,11 +3,7 @@ const THEMES = ['solarized', 'light', 'dark'];
 $(function () {
     const $window = $(window);
     const $body = $('body');
-    const $header = $($('header.blog-info')[0]);
-
-    const $hero = $('.hero');
-    const $background = $('.background');
-    const $title = $('.post-title');
+    const $header = $($('header.navigation')[1]);
     const $article = $('#article');
 
     const $stick = $('aside');
@@ -45,30 +41,14 @@ $(function () {
     let lastScrollTop, prev = 0;
     const event = () => {
         lastScrollTop = $window.scrollTop();
-        const heroHeight = $hero.height();
+        const heroHeight = 0;
         const goingDown = lastScrollTop > prev;
-
-        if (lastScrollTop > heroHeight) {
-            $header.toggleClass('hidden', goingDown);
-            prev = lastScrollTop;
-        }
-        else {
-            $header.addClass('hidden');
-            const opacity = (lastScrollTop / heroHeight) + 0.3;
-            $background.css({ opacity: opacity });
-            $title.css({ opacity: 1 - opacity });
-        }
 
         const pastTitle = lastScrollTop > (heroHeight + 80);
         $stick.toggleClass('fixed', pastTitle);
         $stick.css({ 'marginTop': pastTitle ? '0px' : '80px' });
-
-        if(goingDown) {
-            $stick.css({ 'top': '0px' });
-        } else {
-            $stick.css({ 'top': '80px' });
-            $stick.css({ 'marginTop': '0px' });
-        }
+        $stick.css({ 'top': '80px' });
+        $stick.css({ 'marginTop': '0px' });
 
         const bottomOfArticle = $article.offset().top + $article.height();
         const bottomOfToc = $stick.offset().top + $stick.height();
