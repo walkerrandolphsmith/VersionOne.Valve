@@ -70,102 +70,6 @@
     margin: 0 auto 90px;
     background: @lightGray;
   }
-
-  .info {
-    clear: both;
-    overflow: hidden;
-
-    .category {
-      float: right;
-      width: 30%;
-      display: none;
-      padding: 12px 25px;
-      border-radius: 3px;
-      background: @category;
-      color: @paper;
-      font-family: "Montserrat","Arial",Sans-Serif;
-      font-weight: 400;
-      font-size: 11px;
-      line-height: normal;
-      text-transform: uppercase;
-      text-align: center;
-    }
-  }
-
-  .share-options {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .permalink {
-      width: 65%;
-      overflow: hidden;
-      display: block;
-      float: left;
-      font-family: "Montserrat","Arial",Sans-Serif;
-      font-weight: 400;
-      font-size: 11px;
-      line-height: normal;
-      color: @gray;
-    }
-
-    .share-buttons {
-      padding: 0;
-      margin: 0;
-      display: flex;
-      align-items: center;
-
-      li:first-child {
-        font-family: "Montserrat","Arial",Sans-Serif;
-        font-weight: 400;
-        font-size: 11px;
-        line-height: normal;
-        text-transform: uppercase;
-        color: @gray;
-      }
-
-      li.wiggle:not(:first-child) {
-        animation: wiggle 0.5s infinite;
-      }
-
-      li:hover:not(:first-child) {
-        animation: wiggle 0.5s infinite;
-      }
-
-      @keyframes wiggle {
-        0% {transform:rotate(15deg);}
-        50% {transform:rotate(-15deg);}
-        100% {transform:rotate(15deg);}
-      }
-
-      li {
-        display: block;
-        float: left;
-        border: 5px solid transparent;
-        border-radius: 50%;
-        transition: 300ms linear all;
-
-        a {
-          cursor: pointer;
-          display: block;
-          width: 35px;
-          height: 35px;
-          background: @lightestGray;
-          border-radius: 70px;
-          font-size: 12px;
-          text-align: center;
-          line-height: 35px;
-          transition: background 0.15s ease-in;
-          color: @paper;
-
-          &.twitter { background: @twitter; }
-          &.facebook { background: @facebook; }
-          &.google-plus { background: @google; }
-          &.linkedin { background: @linkedin; }
-        }
-      }
-    }
-  }
 }
 
 .post-bottom .more-content {
@@ -189,85 +93,6 @@
         color: @gray;
       }
     }
-  }
-}
-
-
-
-.author-profile {
-  padding: 35px 0 0;
-  margin: 110px 0 0 0;
-  background: @offWhite;
-  border-top: 1px solid @lightestGray;
-  text-align: center;
-
-  &:after {
-    display: block;
-    clear: both;
-    content: '';
-    width: 20%;
-    background: @lighterGray;
-    height: 1px;
-    margin-top: 35px;
-  }
-
-  .info {
-    margin: -92px 0 30px;
-
-    .profile.gravatar {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto;
-      background: @paper;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      img {
-        width: 80px;
-        height: 80px;
-        border-radius: 90px;
-        overflow: hidden;
-      }
-    }
-
-
-    .meta {
-      margin-top: 40px;
-
-      .title {
-        font-family: "Montserrat","Arial",Sans-Serif;
-        font-weight: 400;
-        font-size: 15px;
-        line-height: normal;
-        text-transform: uppercase;
-        color: @lightGray;
-        display: block;
-        margin-top: 26px;
-      }
-
-      h3 {
-        margin: 5px 0 6px;
-
-        a {
-          font-family: "Varela Round","Arial",Sans-Serif;
-          font-weight: 600;
-          font-size: 24px;
-          line-height: normal;
-          color: @gunmetal;
-        }
-      }
-    }
-  }
-
-  p {
-    font-family: "Oxygen","Arial",Sans-Serif;
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 32px;
-    margin: 20px 0 65px;
-    color: @darkGray;
   }
 }
 
@@ -448,6 +273,34 @@
           }
         }
       }
+    }
+  }
+}
+.themes {
+  display: flex;
+  align-items: center;
+
+  & > div {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+
+  p {
+    font-family: "Oxygen","Arial",Sans-Serif;
+    font-size: 15px;
+    line-height: 33px;
+    color: @darkerGray;
+  }
+
+  input, select, button {
+    max-width: 100%;
+  }
+
+  .show-line-numbers {
+    p {
+      display: inline;
+      padding: 0 12px;
     }
   }
 }
