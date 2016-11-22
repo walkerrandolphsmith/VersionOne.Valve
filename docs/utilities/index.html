@@ -12,36 +12,56 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script>
   </head>
   <body>
-    <header class="blog-info fixed hidden">
+    <main class="page-wrapper">    <header class="navigation fixed">
         <div class="title">
             <a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">VersionOne.Valve</a>
         </div>
         <nav class="main light">
             <ul>
-                <li class="nav-home" role="presentation"><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">Home</a></li>
+                <li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve" title="Home">Home</a></li>
+                <li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/sdk" title="SDK">SDK</a></li><li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/javascript" title="Javascript">Javascript</a></li><li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/glance" title="Glance">Glance</a></li><li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/utilities" title="Utilities">Utilities</a></li>
             </ul>
         </nav>    </header>
-    <main class="page-wrapper">    <section class="hero">
-        <div class="background"></div>
-        <header class="blog-info transparent">
-            <div class="title">
-                <a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">VersionOne.Valve</a>
-            </div>
-            <nav class="main light">
-                <ul>
-                    <li class="nav-home" role="presentation"><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">Home</a></li>
-                </ul>
-            </nav>    </header>
-        <section class="post-item post-title center wrapper">
-            <h1 class="title">VersionOne.Valve</h1>
-        </section>
-    </section>     <section id="article">
+     <section id="article">
         <article class="post-contents">
         <h1></h1>
-        <h2><a name="utils" class="anchor" href="#utils"></a>Utils</h2><p>this is some content you need to know</p>
-<h2><a name="second" class="anchor" href="#second"></a>Second</h2><p>more and more ana more</p>
-<h2><a name="third" class="anchor" href="#third"></a>Third</h2><p>at last we meet the end</p>
+        <h2><a name="utils" class="anchor" href="#utils"></a>Utils</h2><p>Certain functionality appears in valve files over and over, thus we have some
+common utilities. We only ask that something be promoted to a utility and not
+born a utility, meaning only create it in the common utilities if it is used in more than one valve feature.</p>
+<h2><a name="throttle" class="anchor" href="#throttle"></a>Throttle</h2><p>Often we use the SDK to populate a feature with large data sets. Each Asset creation
+requires its own HTTP request. The SDK leverages Promises to handle the asynchrnous nature of HTTP requests.
+The web server can only handle a finite number of open requests, so creating 10,000 stories simultanousely will
+surely cause some 500 error responses. THis is why Throttle was born. Throttle handles a huge number of Promises
+to be handled by allowing <strong>N</strong> Promises to process at a time.</p>
+<p>Throttle takes an array of functions such that every function returns a Promise.
+Passing a collection of functions allows the desired ‘work’ of the Promise to be deferred
+until Throttle is ready for it to occur.</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token comment" spellcheck="true">/*
+*
+* Only so many HTTP requests can be handled by IIS at once so throttle them!
+*
+*/</span>
 
+<span class="token comment" spellcheck="true">// There will always be 25 promises in pending</span>
+<span class="token keyword" >const</span> promisesInFlight <span class="token operator" >=</span> <span class="token number" >25</span><span class="token punctuation" >;</span>
+<span class="token comment" spellcheck="true">// Create a array of functions that return a Promise</span>
+<span class="token keyword" >const</span> promises <span class="token operator" >=</span> <span class="token punctuation" >[</span><span class="token number" >1</span><span class="token punctuation" >,</span> <span class="token number" >2</span><span class="token punctuation" >,</span> <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >,</span> <span class="token number" >10000</span><span class="token punctuation" >]</span><span class="token punctuation" >.</span><span class="token function" >map</span><span class="token punctuation" >(</span>i <span class="token operator" >=</span><span class="token operator" >></span> <span class="token punctuation" >(</span><span class="token punctuation" >)</span> <span class="token operator" >=</span><span class="token operator" >></span> Promise<span class="token punctuation" >.</span><span class="token function" >resolve</span><span class="token punctuation" >(</span>i<span class="token punctuation" >)</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+<span class="token comment" spellcheck="true">// throttler returns a promise when all its inputs have been processed</span>
+<span class="token keyword" >const</span> resolvedValues <span class="token operator" >=</span> <span class="token keyword" >await</span> <span class="token function" >throttler</span><span class="token punctuation" >(</span>promises<span class="token punctuation" >,</span> promisesInFlight<span class="token punctuation" >)</span><span class="token punctuation" >;</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><h2><a name="times" class="anchor" href="#times"></a>Times</h2><p>Unfortunately there is not a native range function in JavaScript and 
+the best we get is this XD <code>Array.from(Array(n), (_, i) =&gt; i);</code>
+This is not clear and not fun to write.</p>
+<p>We often create <strong>N</strong> stories or change sets. Times is an implementation of range
+The given an int returns an array of int elements.</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token comment" spellcheck="true">//Create thrity stories each with a name</span>
+<span class="token function" >times</span><span class="token punctuation" >(</span><span class="token number" >30</span><span class="token punctuation" >)</span><span class="token punctuation" >.</span><span class="token function" >map</span><span class="token punctuation" >(</span>i <span class="token operator" >=</span><span class="token operator" >></span> v1<span class="token punctuation" >.</span><span class="token function" >create</span><span class="token punctuation" >(</span><span class="token string" >'Story'</span> <span class="token punctuation" >{</span> Name<span class="token punctuation" >:</span> i <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >)</span><span class="line-numbers-rows"><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><h2><a name="drop-moment" class="anchor" href="#drop-moment"></a>Drop Moment</h2><p>The SDK Create function returns promise that eventually resolves an object that 
+represents the newly created Asset.</p>
+<p>The object contains an id property that is the Oid of the new asset.
+This oid however is of the form <code>AssetType:Number:Moment</code>.
+Updating the Asset, executing an operation on that Asset,
+ or relating it to another Asset would require the oid token without the Moment.
+Therefore we have created a string operation to remove the <code>:Moment</code> from the id.</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token keyword" >const</span> story <span class="token operator" >=</span> <span class="token keyword" >await</span> v1<span class="token punctuation" >.</span><span class="token function" >create</span><span class="token punctuation" >(</span><span class="token string" >'Story'</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span><span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+<span class="token keyword" >const</span> changeSet <span class="token operator" >=</span> v1<span class="token punctuation" >.</span><span class="token function" >create</span><span class="token punctuation" >(</span><span class="token string" >'ChangeSet'</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span> PrimaryWorkitems<span class="token punctuation" >:</span> <span class="token punctuation" >[</span><span class="token function" >dropMoment</span><span class="token punctuation" >(</span>story<span class="token punctuation" >.</span>id<span class="token punctuation" >)</span><span class="token punctuation" >]</span> <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="line-numbers-rows"><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div>
         </article>
         <div class="aside-wrapper">
             <aside class="natural">
@@ -55,10 +75,13 @@
                              <a href="/utilities#utils">Utils</a>
                           </li>
                           <li>
-                             <a href="/utilities#second">Second</a>
+                             <a href="/utilities#throttle">Throttle</a>
                           </li>
                           <li>
-                             <a href="/utilities#third">Third</a>
+                             <a href="/utilities#times">Times</a>
+                          </li>
+                          <li>
+                             <a href="/utilities#drop-moment">Drop Moment</a>
                           </li>
                       </ul>
                   </section>

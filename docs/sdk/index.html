@@ -12,34 +12,150 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script>
   </head>
   <body>
-    <header class="blog-info fixed hidden">
+    <main class="page-wrapper">    <header class="navigation fixed">
         <div class="title">
             <a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">VersionOne.Valve</a>
         </div>
         <nav class="main light">
             <ul>
-                <li class="nav-home" role="presentation"><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">Home</a></li>
+                <li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve" title="Home">Home</a></li>
+                <li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/sdk" title="SDK">SDK</a></li><li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/javascript" title="Javascript">Javascript</a></li><li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/glance" title="Glance">Glance</a></li><li><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve/utilities" title="Utilities">Utilities</a></li>
             </ul>
         </nav>    </header>
-    <main class="page-wrapper">    <section class="hero">
-        <div class="background"></div>
-        <header class="blog-info transparent">
-            <div class="title">
-                <a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">VersionOne.Valve</a>
-            </div>
-            <nav class="main light">
-                <ul>
-                    <li class="nav-home" role="presentation"><a href="http://walkerrandolphsmith.github.io/VersionOne.Valve">Home</a></li>
-                </ul>
-            </nav>    </header>
-        <section class="post-item post-title center wrapper">
-            <h1 class="title">VersionOne.Valve</h1>
-        </section>
-    </section>     <section id="article">
+     <section id="article">
         <article class="post-contents">
         <h1></h1>
-        <p>#SDK</p>
+        <h2><a name="versionone-sdk" class="anchor" href="#versionone-sdk"></a>VersionOne SDK</h2><p>The VersionOne SDK is an open source library. The full documentation can
+ be found at <a href="https://github.com/versionone/VersionOne.SDK.JavaScript">VersionOne.JavaScript.SDK</a>.</p>
+<p> The SDK does not directly require a dependency on an AJAX library to make HTTP requests, but instead allows the consumer to choose the library of their choice and pass it as a parameter to the SDK.
+ Valve uses <a href="https://github.com/mzabriskie/axios/blob/master/README.md">axios</a>. </p>
+<p> Valve has a <code>Runner</code> class that contains an authenticate method, that allows
+ calls to be made to a VersionOne system as a specific user of that instance.
+ The following shows how the VersionOne sdk is created:</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"> <span class="token keyword" >const</span> axios <span class="token operator" >=</span> <span class="token function" >require</span><span class="token punctuation" >(</span><span class="token string" >'axios'</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+ <span class="token keyword" >const</span> v1sdk <span class="token operator" >=</span> <span class="token function" >require</span><span class="token punctuation" >(</span><span class="token string" >'v1sdk/dist/index'</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+ <span class="token keyword" >const</span> sdk <span class="token operator" >=</span> v1sdk<span class="token punctuation" >.</span><span class="token keyword" >default</span><span class="token punctuation" >;</span>
+ <span class="token keyword" >const</span> axiosConnector <span class="token operator" >=</span> v1sdk<span class="token punctuation" >.</span>axiosConnector<span class="token punctuation" >;</span>
+ <span class="token keyword" >const</span> <span class="token punctuation" >{</span> v1Protocol<span class="token punctuation" >,</span> v1Port<span class="token punctuation" >,</span> v1Host<span class="token punctuation" >,</span> v1Instance <span class="token punctuation" >}</span> <span class="token operator" >=</span> <span class="token function" >require</span><span class="token punctuation" >(</span><span class="token string" >'./config'</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
 
+ module<span class="token punctuation" >.</span>exports <span class="token operator" >=</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+     <span class="token keyword" >const</span> isHttps <span class="token operator" >=</span> v1Protocol <span class="token operator" >===</span> <span class="token string" >'https'</span><span class="token punctuation" >;</span>
+     <span class="token keyword" >const</span> url <span class="token operator" >=</span> <span class="token template-string" ><span class="token string" >`</span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>v1Protocol<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >://</span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>v1Host<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >:</span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>v1Port<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >/</span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>v1Instance<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >/`</span></span><span class="token punctuation" >;</span>
+
+     <span class="token keyword" >const</span> axiosConnectedSdk <span class="token operator" >=</span> <span class="token function" >axiosConnector</span><span class="token punctuation" >(</span>axios<span class="token punctuation" >)</span><span class="token punctuation" >(</span>sdk<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+     <span class="token keyword" >const</span> unauthenticatedV1 <span class="token operator" >=</span> <span class="token function" >axiosConnectedSdk</span><span class="token punctuation" >(</span>v1Host<span class="token punctuation" >,</span> v1Instance<span class="token punctuation" >,</span> v1Port<span class="token punctuation" >,</span> isHttps<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+     <span class="token comment" spellcheck="true">/*
+      * Defering a call to withCreds allows each valve file determine 
+      * which user to perform actions on the behalf of!
+      */</span>
+     <span class="token keyword" >const</span> authenticate <span class="token operator" >=</span> <span class="token punctuation" >(</span>username<span class="token punctuation" >,</span> password<span class="token punctuation" >)</span> <span class="token operator" >=</span><span class="token operator" >></span> <span class="token punctuation" >{</span>
+             <span class="token keyword" >return</span> unauthenticatedV1<span class="token punctuation" >.</span><span class="token function" >withCreds</span><span class="token punctuation" >(</span>username<span class="token punctuation" >,</span> password<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+     <span class="token punctuation" >}</span>
+     <span class="token keyword" >return</span> <span class="token punctuation" >{</span> url<span class="token punctuation" >,</span> authenticate <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><p>In <code>v1.js</code> we create and export an instance of the VersionOne SDK.
+We read the <code>v1Protocol</code>, <code>v1Port</code>, <code>v1Host</code>, <code>v1Instance</code> from 
+ the <code>.env</code> file to create a connection to a specific VersionOne instance.
+ The module returns a function to authenticate and the url being used.</p>
+<p>The <code>Runner</code> class can be subclassed by our valve files to enable easy authentication to a 
+VersionOne instance.</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers">module<span class="token punctuation" >.</span>exports <span class="token operator" >=</span> <span class="token keyword" >class</span> <span class="token class-name" >Runner</span> <span class="token punctuation" >{</span>
+    <span class="token function" >constructor</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+        <span class="token comment" spellcheck="true">/*
+         *
+         * getV1 is the module exported in v1.js
+         * it's invocation returns the authenticate method
+         *
+         */</span>
+        <span class="token keyword" >const</span> <span class="token punctuation" >{</span> url<span class="token punctuation" >,</span> authenticate <span class="token punctuation" >}</span> <span class="token operator" >=</span> <span class="token function" >getV1</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+        <span class="token keyword" >this</span><span class="token punctuation" >.</span>authenticate <span class="token operator" >=</span> authenticate<span class="token punctuation" >;</span>
+        <span class="token keyword" >this</span><span class="token punctuation" >.</span>rootUrl <span class="token operator" >=</span> url<span class="token punctuation" >;</span>
+        console<span class="token punctuation" >.</span><span class="token function" >info</span><span class="token punctuation" >(</span><span class="token template-string" ><span class="token string" >`==> 💻  Connecting to the VersionOne instance: </span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>url<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >`</span></span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+    <span class="token punctuation" >}</span>
+
+    <span class="token comment" spellcheck="true">/*
+     *
+     * The Runner class exposes an authenticateAs method
+     * that can be used in a subclass
+     *
+     */</span>
+    <span class="token function" >authenticateAs</span><span class="token punctuation" >(</span>username<span class="token punctuation" >,</span> password<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+        <span class="token keyword" >return</span> <span class="token keyword" >this</span><span class="token punctuation" >.</span><span class="token function" >authenticate</span><span class="token punctuation" >(</span>username<span class="token punctuation" >,</span> password<span class="token punctuation" >)</span>
+    <span class="token punctuation" >}</span>
+    <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span>
+<span class="token punctuation" >}</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><p>An example of a valve feature that inherits from the <code>Runner</code> class may look like:</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token comment" spellcheck="true">/*
+ *
+ * ValveRunner extends Runner
+ * allows this class to inherit from Runner
+ *
+ */</span>
+module<span class="token punctuation" >.</span>exports <span class="token operator" >=</span> <span class="token keyword" >class</span> <span class="token class-name" >ValveRunner</span> <span class="token keyword" >extends</span> <span class="token class-name" >Runner</span> <span class="token punctuation" >{</span>
+    <span class="token keyword" >async</span> <span class="token function" >command</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+        <span class="token comment" spellcheck="true">/*
+         *
+         * Call this.authenticateAs given a username and password
+         * to comunicate with a VersionOne instance
+         *
+         */</span>
+        <span class="token keyword" >const</span> v1 <span class="token operator" >=</span> <span class="token keyword" >this</span><span class="token punctuation" >.</span><span class="token function" >authenticateAs</span><span class="token punctuation" >(</span><span class="token string" >'admin'</span><span class="token punctuation" >,</span> <span class="token string" >'admin'</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+    <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><h2><a name="attributes" class="anchor" href="#attributes"></a>Attributes</h2><p>The Create and Update commands provided by the SDK take an object of Attributes.
+Create takes Attributes that will exist on the new asset,
+and Update takes Attributes that will modify an existing Asset.
+The object is structured the same in both cases:</p>
+<p>Given the following object as an example: </p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token punctuation" >{</span>
+    Name<span class="token punctuation" >:</span> <span class="token string" >'My Bundle'</span><span class="token punctuation" >,</span>
+    Phase<span class="token punctuation" >:</span> <span class="token string" >'Phase:123'</span><span class="token punctuation" >,</span>
+    ChangeSets<span class="token punctuation" >:</span> <span class="token punctuation" >[</span><span class="token string" >'ChangeSet:123'</span><span class="token punctuation" >,</span> <span class="token string" >'ChangeSet:456'</span><span class="token punctuation" >]</span>
+<span class="token punctuation" >}</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><p>The keys are valid Attribute names for a given Asset.
+The value of each key is valid based on the following:</p>
+<ol>
+<li><p><strong>Scalars:</strong> like <code>Name</code> take a string value.  </p>
+</li>
+<li><p><strong>Single-value relation:</strong> like <code>Phase</code> takes a string that is a valid Oid of
+an existing asset.  </p>
+</li>
+<li><p><strong>Multi-value relations:</strong> like <code>ChangeSets</code> takes an array.
+If the array contains string Oids then a relationship is added.
+This is merely a short hand for <code>{ &quot;value&quot;: &quot;ChangeSet:123&quot;, &quot;act&quot;: &quot;add&quot; }</code><br>If you want to remove an asset from the relationship then an object must be in 
+the array that is of the form <code>{ &quot;value&quot;: &quot;ChangeSet:123&quot;, &quot;act&quot;: &quot;remove&quot; }</code></p>
+</li>
+</ol>
+<h2><a name="create" class="anchor" href="#create"></a>Create</h2><p>Create has two parameters an AssetType and Attributes:</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token punctuation" >.</span><span class="token function" >create</span><span class="token punctuation" >(</span><span class="token string" >'Bundle'</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+    Name<span class="token punctuation" >:</span> <span class="token string" >'My Bundle'</span><span class="token punctuation" >,</span>
+    Phase<span class="token punctuation" >:</span> <span class="token string" >'Phase:123'</span><span class="token punctuation" >,</span>
+    ChangeSets<span class="token punctuation" >:</span> <span class="token punctuation" >[</span><span class="token string" >'ChangeSet:123'</span><span class="token punctuation" >,</span> <span class="token string" >'ChangeSet:456'</span><span class="token punctuation" >]</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><h2><a name="update" class="anchor" href="#update"></a>Update</h2><p>Create has two parameters an Oid of an existing Asset and Attributes:</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token punctuation" >.</span><span class="token function" >create</span><span class="token punctuation" >(</span><span class="token string" >'Bundle:123'</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+    Name<span class="token punctuation" >:</span> <span class="token string" >'My Bundle'</span><span class="token punctuation" >,</span>
+    Phase<span class="token punctuation" >:</span> <span class="token string" >'Phase:123'</span><span class="token punctuation" >,</span>
+    ChangeSets<span class="token punctuation" >:</span> <span class="token punctuation" >[</span><span class="token string" >'ChangeSet:123'</span><span class="token punctuation" >,</span> <span class="token string" >'ChangeSet:456'</span><span class="token punctuation" >]</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><h2><a name="query" class="anchor" href="#query"></a>Query</h2><p>Query via the SDK leverages the <code>query.v1</code> endpoint. The SDK accepts an object
+That contains these keys: <code>from</code>, <code>select</code>, <code>filter</code>, <code>find</code>. </p>
+<p><code>from</code>: is a valid AssetType to query on<br><code>select</code>: is an array of Attributes and Related Assets’ Attributes to include in your projection<br><code>filter</code>: is a array of filters to apply to your query<br><code>find</code>: is a string that further filters the results  </p>
+<p>The following is a way to search for all Epics that are not Closed and have a name that begin’s with “My Epic Name”
+The result set will be an array of objects with the shape described by the select key.</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers">v1<span class="token punctuation" >.</span><span class="token function" >query</span><span class="token punctuation" >(</span><span class="token punctuation" >{</span>
+      <span class="token string" >'from'</span><span class="token punctuation" >:</span> <span class="token string" >'Epic'</span><span class="token punctuation" >,</span>
+      <span class="token string" >'select'</span><span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+          <span class="token string" >'Name'</span><span class="token punctuation" >,</span>
+          <span class="token string" >'Scope'</span><span class="token punctuation" >,</span>
+          <span class="token string" >'AssetType'</span><span class="token punctuation" >,</span>
+          <span class="token string" >'Category'</span><span class="token punctuation" >,</span>
+          <span class="token string" >'Category.Name'</span>
+      <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+      <span class="token string" >'filter'</span><span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+          <span class="token string" >"AssetState!='Closed'"</span>
+      <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+      <span class="token string" >'find'</span><span class="token punctuation" >:</span> <span class="token string" >'My Epic Name*'</span>
+  <span class="token punctuation" >}</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div><h2><a name="operations" class="anchor" href="#operations"></a>Operations</h2><p>VersionOne provides operations that can be issued on Assets. The SDK
+allows for those operations to be invoked with an Oid of an existing Asset
+ and the name of the operation. Note: Supported operations are dependent on the 
+ AssetType!</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers">v1<span class="token punctuation" >.</span><span class="token function" >executeOperation</span><span class="token punctuation" >(</span><span class="token string" >'Story:123'</span><span class="token punctuation" >,</span> <span class="token string" >'Close'</span><span class="token punctuation" >)</span><span class="line-numbers-rows"><span></span></span></code></pre><i class="fa fa-copy"></i></div>
         </article>
         <div class="aside-wrapper">
             <aside class="natural">
@@ -49,6 +165,24 @@
                       <i class="fa fa-plus expander"></i>
                       </header>
                       <ul>
+                          <li>
+                             <a href="/sdk#versionone-sdk">VersionOne SDK</a>
+                          </li>
+                          <li>
+                             <a href="/sdk#attributes">Attributes</a>
+                          </li>
+                          <li>
+                             <a href="/sdk#create">Create</a>
+                          </li>
+                          <li>
+                             <a href="/sdk#update">Update</a>
+                          </li>
+                          <li>
+                             <a href="/sdk#query">Query</a>
+                          </li>
+                          <li>
+                             <a href="/sdk#operations">Operations</a>
+                          </li>
                       </ul>
                   </section>
             </aside>
