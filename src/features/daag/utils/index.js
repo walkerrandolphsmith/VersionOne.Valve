@@ -45,7 +45,12 @@ export const getDaagScope = async (v1, scopeName) => {
     }).then(scheme => dropMoment(scheme.id));
 
     const scopeOid = await getScope(v1, scopeName, schemeOid);
-    return scopeOid;
+
+    return { 
+        scopeOid, schemeOid, 
+        developmentPhase, testingPhase, productionPhase,
+        epicCategory, featureCategory, subFeatureCategory, initiativeCategory
+    };
 };
 
 
