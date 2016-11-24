@@ -66,3 +66,59 @@ const story = await v1.create('Story', {});
 const changeSet = v1.create('ChangeSet', { PrimaryWorkitems: [dropMoment(story.id)] })
 ```
 
+
+## getOidFromName
+
+Often we have the name of an Asset of particular type in the system and needs its oid.
+This method ensures that when requesting for an oid given an Asset's name you are "guaranteed" to
+retrieve an oid. If an Asset of the provided `AssetType` is found with the provided `Name` its oid is returned,
+otherwise an Asset is created with the provided `Name` and its oid is returned.
+Note: Many Assets can have the same `Name`, therefore the first one found is the oid you'll get back.
+
+```js
+const getOidFromName = async (v1, assetType, name, attributes = {}) => {
+    if(!assetType || !name) throw new Error('AssetType and name required.');
+    const attrs = Object.assign({}, { Name: name }, attributes);
+    return await v1.query({
+        from: assetType, select: ['Name'], where: { Name: name }
+    }).then(assets => assets[0][0] ? assets[0][0]._oid : v1.create(assetType, attrs).then(a => dropMoment(a.id)));
+};
+```
+
+There are more specific functions that can be used to retrieve an oid given a `Story` `Name`.
+Note: Assets in VersionOne have various Attributes some of which are required to exists. This method will
+use default values for required Attributes to ensure the Asset can be created, however you can provide your own `Attributes` that
+will override the defaults!
+
+If you intend to add a new `getAsset` to the common utilities please ensure that 
+the default attributes satisfy the requirements for creating an Asset of that type.
+These methods are intended to psuedo "guarantee" oid retrieval.
+The required Attributes may depending on what version of Meta your instance uses, however this problem has yet to be solved.
+
+
+```js
+export const getScope = async (v1, name, attributes = {}) => {
+    const attrs = Object.assign({}, {
+        Parent: 'Scope:0',
+        //Scheme: schemeOid, what is a default scheme oid?
+        BeginDate: '2016-06-28'
+    }, attributes);
+
+    return await getOidFromName(v1, 'Scope', name, attrs);
+};
+```
+
+For a consumer using `getScope` may look like the following:
+
+```js
+/*
+*
+* v1 is an instance of the SDK
+*
+*/
+const scopeOid = await getScope(v1, 'scopeName', {
+    Scheme: 'Scheme:123',
+    Description: 'More Values to use when creating',
+    BeginDate: '2050-06-11' //I can override the defaults too!
+});
+```
