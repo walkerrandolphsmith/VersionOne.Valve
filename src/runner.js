@@ -7,7 +7,9 @@ module.exports = class Runner {
     constructor(options) {
         this.spinner = new Spinner('processing... %s');
         this.spinner.setSpinnerString('/-\\');
+        this.options = options;
         this.startTime = undefined;
+        this.endTime = undefined;
 
         const { url, authenticate } = getV1();
         this.authenticate = authenticate;
@@ -31,19 +33,32 @@ module.exports = class Runner {
     }
 
     stop() {
-        const endTime = Date.now() - this.startTime;
+        this.endTime = Date.now() - this.startTime;
         this.spinner.stop();
-        console.log(chalk.green.underline(`\nFinished running commands in ${chalk.bold(endTime)} ms!`));
     }
 
     execute() {
         this.start();
         return this.command().then(() => {
             this.stop();
+            console.log(
+                chalk.green.underline(`\nFinished running commands in ${chalk.bold(this.endTime)} ms!`)
+            );
         }).catch(error => {
-            console.log(chalk.bold.red('Something went wrong... For more details use try catch in your feature. Details: '), error);
-            console.log(error.stack);
             this.stop();
+            const isAxiosError = error.response;
+            if(isAxiosError) {
+                console.log(
+                    chalk.red(`ERROR ${chalk.bold.underline(error.response.status)} ${error.response.statusText}`)
+                );
+                const {method, url, data} = error.config;
+                console.log(chalk.red(`HTTP ${method} made to ${url}`));
+                console.log(JSON.stringify(JSON.parse(data), null, ' '));
+                if(this.options.verbose) console.log(error.stack);
+            } else {
+                console.log(chalk.red('ERROR ') + error);
+                if(this.options.verbose) console.log(error);
+            }
         })
     }
 
