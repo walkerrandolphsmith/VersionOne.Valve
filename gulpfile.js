@@ -156,6 +156,9 @@ gulp.task('metalsmith', () => {
             },
             Utilities: {
                 pattern: 'utilities/*.md'
+            },
+            CTM: {
+                pattern: 'ctm/*.md'
             }
         }))
         .use(toc())
