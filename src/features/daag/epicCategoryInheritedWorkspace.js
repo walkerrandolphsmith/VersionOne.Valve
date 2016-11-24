@@ -1,8 +1,8 @@
 import Runner from './../../runner';
 import dropMoment from './../../common/dropMoment';
 import { ROOT_SCOPE, DONE_STORY_STATUS, OID_NULL } from './../../common/constants';
+import { getPhase } from './../../common/getOidFromName';
 import {
-    getPhase,
     getEpicCategories,
     createStoriesForScope
 } from './utils';

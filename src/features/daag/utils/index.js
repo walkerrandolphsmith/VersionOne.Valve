@@ -1,27 +1,7 @@
 import dropMoment from './../../../common/dropMoment';
 import times from './../../../common/times';
-import { ROOT_SCOPE, DONE_STORY_STATUS } from './../../../common/constants';
-
-export const getScope = async(v1, name, schemeOid) => v1
-    .query({
-        from: 'Scope', select: ['Name'], where: {Name: name}
-    }).then(results => results[0][0]
-            ? results[0][0]._oid
-            : v1.create('Scope', {
-            Name: name,
-            Parent: ROOT_SCOPE,
-            Scheme: schemeOid,
-            BeginDate: '2016-06-28'
-        }).then(scope => dropMoment(scope.id))
-    );
-
-export const getPhase = (v1, name) => v1
-    .query({
-        from: 'Phase', select: ['Name'], where: {Name: name}
-    }).then(results => results[0][0]
-        ? results[0][0]._oid
-        : v1.create('Phase', {Name: name}).then(phase => dropMoment(phase.id))
-    );
+import { getScope, getPhase } from './../../../common/getOidFromName';
+import { DONE_STORY_STATUS } from './../../../common/constants';
 
 export const getDaagScope = async (v1, scopeName) => {
     const developmentPhase = await getPhase(v1, 'Development');
@@ -44,7 +24,7 @@ export const getDaagScope = async (v1, scopeName) => {
         SelectedValues: schemeValues
     }).then(scheme => dropMoment(scheme.id));
 
-    const scopeOid = await getScope(v1, scopeName, schemeOid);
+    const scopeOid = await getScope(v1, scopeName, { Scheme: schemeOid });
 
     return { 
         scopeOid, schemeOid, 

@@ -2,9 +2,8 @@ import Runner from './../../runner';
 import dropMoment from './../../common/dropMoment';
 import times from './../../common/times';
 import { DONE_STORY_STATUS } from './../../common/constants';
+import { getScope, getPhase } from './../../common/getOidFromName';
 import {
-    getScope,
-    getPhase,
     getEpicCategories,
     createStory,
     createDoneStory,
@@ -46,7 +45,7 @@ module.exports = class ValveRunner extends Runner {
             SelectedValues: schemeValues
         }).then(scheme => dropMoment(scheme.id));
 
-        const scopeOid = await getScope(v1, SCOPE_NAME, schemeOid);
+        const scopeOid = await getScope(v1, SCOPE_NAME, { Scheme: schemeOid });
 
         const doneStories = await Promise.all(times(10).map(i => createDoneStory(v1, scopeOid)));
         const doneChangeSets = await Promise.all(

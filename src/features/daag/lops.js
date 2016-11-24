@@ -1,15 +1,11 @@
 import Runner from './../../runner';
 import dropMoment from './../../common/dropMoment';
 import times from './../../common/times';
-import { DONE_STORY_STATUS, OID_NULL } from './../../common/constants';
-import {
-    getScope,
-    getPhase,
-    getEpicCategories,
-    createStory
-} from './utils';
+import { getScope, getPhase } from './../../common/getOidFromName';
+import { DONE_STORY_STATUS } from './../../common/constants';
+import { getEpicCategories } from './utils';
 
-const SCOPE_NAME = '100 Item Scope 2';
+const SCOPE_NAME = 'LOPS.js';
 
 module.exports = class ValveRunner extends Runner {
     async command() {
@@ -24,7 +20,7 @@ module.exports = class ValveRunner extends Runner {
             SelectedValues: schemeValues
         }).then(scheme => dropMoment(scheme.id));
 
-        const scopeOid = await getScope(v1, SCOPE_NAME, schemeOid);
+        const scopeOid = await getScope(v1, SCOPE_NAME, { Scheme: schemeOid });
 
         /*--------------------------------------------------------------------------------------------*/
         /*---------------------------------- Create ten epics each with 1000  ------------------------*/
@@ -39,10 +35,10 @@ module.exports = class ValveRunner extends Runner {
 
         await epics.map(epic => Promise.all(
             times(100).map(async (i) => await v1.create('Story', {
-				Name: 'Story ' + i,
-				Scope: scopeOid,
-				Super: dropMoment(epic.id)
-			})
+                Name: 'Story ' + i,
+                Scope: scopeOid,
+                Super: dropMoment(epic.id)
+            })
         )));
 
         return Promise.resolve();
