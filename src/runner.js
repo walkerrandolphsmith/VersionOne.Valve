@@ -1,9 +1,10 @@
 const Spinner = require('cli-spinner').Spinner;
 const getV1 = require('./v1');
 const chalk = require('chalk');
+const moment = require('moment');
 
 module.exports = class Runner {
-    constructor() {
+    constructor(options) {
         this.spinner = new Spinner('processing... %s');
         this.spinner.setSpinnerString('/-\\');
         this.startTime = undefined;
@@ -11,7 +12,7 @@ module.exports = class Runner {
         const { url, authenticate } = getV1();
         this.authenticate = authenticate;
         this.rootUrl = url;
-        console.info(`==> 💻  Connecting to the VersionOne instance: ${url}`);
+
     }
 
     authenticateAs(username, password) {
@@ -20,13 +21,19 @@ module.exports = class Runner {
 
     start() {
         this.spinner.start();
-        this.startTime = Date.now()
+        this.startTime = Date.now();
+
+        console.log('\n\n');
+        console.log('Run on ' + moment(this.startTime).format('LLLL'));
+        console.info(
+            `${chalk.bold.cyan('==>')} Connecting to the VersionOne instance: ${chalk.bold.cyan(this.rootUrl)}`
+        );
     }
 
     stop() {
         const endTime = Date.now() - this.startTime;
         this.spinner.stop();
-        console.log(chalk.bold.cyan(`\nFinished running commands in ${endTime} ms!`));
+        console.log(chalk.green.underline(`\nFinished running commands in ${chalk.bold(endTime)} ms!`));
     }
 
     execute() {
