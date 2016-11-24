@@ -21,14 +21,14 @@ module.exports = class ValveRunner extends Runner {
 
 
         let loeEpics = [];
-		let epicCount = 0;
+        let epicCount = 0;
         while (loeEpics.length < 300) {
-			let result = await v1.create('Epic', {
+            let result = await v1.create('Epic', {
                     Name: 'ValveEpic LoadEpic ' + epicCount++,
                     Category: epicCategory,
                     Scope: scopeOid
                 });
-			loeEpics.push(result);
+            loeEpics.push(result);
         }
 
         console.log('creating stories on epics');
@@ -36,8 +36,8 @@ module.exports = class ValveRunner extends Runner {
         while (loeEpics.length > 0) {
             console.log("epics remaining: ", loeEpics.length);
             await Promise.all(loeEpics.slice(0, 2).map(async(epic) => {
-	        const numberOfItems = once ? 10 : 100;
-		once = true;
+            const numberOfItems = once ? 10 : 100;
+        once = true;
                 const loeStories = await Promise.all(times(numberOfItems).map(i => createStory(v1, scopeOid)));
                 const loeChangeSets = await Promise.all(
                     loeStories.map(story => createChangeSet(v1, [dropMoment(story.id)]))
