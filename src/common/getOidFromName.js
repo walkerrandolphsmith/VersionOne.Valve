@@ -1,5 +1,5 @@
 import dropMoment from './dropMoment';
-import { ROOT_SCOPE } from './constants';
+import { ROOT_SCOPE, ADMIN_ROLE } from './constants';
 
 const getOidFromName = async (v1, assetType, name, attributes = {}) => {
     if(!assetType || !name) throw new Error('AssetType and name required.');
@@ -22,3 +22,17 @@ export const getScope = async (v1, name, attributes = {}) => {
 };
 
 export const getPhase = async (v1, name) => await getOidFromName(v1, 'Phase', name);
+
+export const getMember = async (v1, name, attributes = {}) =>  {
+    const attrs = Object.assign({}, {
+        Username: name,
+        Password: name,
+        DefaultRole : ADMIN_ROLE,
+        IsCollaborator : false,
+        Nickname : name,
+        NotifyViaEmail : true,
+        SendConversationEmails : true
+    }, attributes);
+
+    return await getOidFromName(v1, 'Member', name, attrs);
+};
