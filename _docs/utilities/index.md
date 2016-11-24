@@ -69,8 +69,8 @@ const changeSet = v1.create('ChangeSet', { PrimaryWorkitems: [dropMoment(story.i
 
 ## getOidFromName
 
-Often we have the name of an Asset of particular type in the system and needs its oid.
-This method ensures that when requesting for an oid given an Asset's name you are "guaranteed" to
+Often we have the name of an Asset in the system and need its oid.
+This method ensures that when requesting for an oid given an Asset's `Name` and it's `AssetType` you are "guaranteed" to
 retrieve an oid. If an Asset of the provided `AssetType` is found with the provided `Name` its oid is returned,
 otherwise an Asset is created with the provided `Name` and its oid is returned.
 Note: Many Assets can have the same `Name`, therefore the first one found is the oid you'll get back.
@@ -81,7 +81,10 @@ const getOidFromName = async (v1, assetType, name, attributes = {}) => {
     const attrs = Object.assign({}, { Name: name }, attributes);
     return await v1.query({
         from: assetType, select: ['Name'], where: { Name: name }
-    }).then(assets => assets[0][0] ? assets[0][0]._oid : v1.create(assetType, attrs).then(a => dropMoment(a.id)));
+    }).then(assets => assets[0][0] 
+                ? assets[0][0]._oid
+                : v1.create(assetType, attrs).then(a => dropMoment(a.id))
+    );
 };
 ```
 
@@ -93,7 +96,7 @@ will override the defaults!
 If you intend to add a new `getAsset` to the common utilities please ensure that 
 the default attributes satisfy the requirements for creating an Asset of that type.
 These methods are intended to psuedo "guarantee" oid retrieval.
-The required Attributes may depending on what version of Meta your instance uses, however this problem has yet to be solved.
+The required Attributes may vary depending on what version of Meta your instance uses, however this problem has yet to be solved.
 
 
 ```js
