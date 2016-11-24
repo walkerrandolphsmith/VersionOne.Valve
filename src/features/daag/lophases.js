@@ -1,7 +1,7 @@
 import Runner from './../../runner';
 import dropMoment from './../../common/dropMoment';
 import times from './../../common/times';
-import { DONE_STORY_STATUS, OID_NULL } from './../../common/constants';
+import { DONE_STORY_STATUS } from './../../common/constants';
 import {
     getScope,
     getPhase,

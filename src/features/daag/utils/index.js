@@ -23,6 +23,32 @@ export const getPhase = (v1, name) => v1
         : v1.create('Phase', {Name: name}).then(phase => dropMoment(phase.id))
     );
 
+export const getDaagScope = async (v1, scopeName) => {
+    const developmentPhase = await getPhase(v1, 'Development');
+    const testingPhase = await getPhase(v1, 'Testing');
+    const productionPhase = await getPhase(v1, 'Production');
+
+    const epicCategory = await getEpicCategories(v1, 'Epic');
+    const featureCategory = await getEpicCategories(v1, 'Feature');
+    const subFeatureCategory = await getEpicCategories(v1, 'SubFeature');
+    const initiativeCategory = await getEpicCategories(v1, 'Initiative');
+
+    const schemeValues = [
+        developmentPhase, testingPhase, productionPhase,
+        epicCategory, featureCategory, subFeatureCategory, initiativeCategory,
+        DONE_STORY_STATUS
+    ];
+
+    const schemeOid = await v1.create('Scheme', {
+        Name: 'ValveScheme',
+        SelectedValues: schemeValues
+    }).then(scheme => dropMoment(scheme.id));
+
+    const scopeOid = await getScope(v1, scopeName, schemeOid);
+    return scopeOid;
+};
+
+
 export const getEpicCategories = async(v1, name) => v1
     .query({
         from: 'EpicCategory', select: ['Name'], where: {Name: name}
