@@ -1,6 +1,7 @@
 import Runner from './../../runner';
 import dropMoment from './../../common/dropMoment';
 import times from './../../common/times';
+import throttler from './../../common/throttler';
 import {
     getDaagScope
     createStory,
@@ -18,18 +19,19 @@ module.exports = class ValveRunner extends Runner {
         /*--------------------------------------------------------------------------------------------*/
         /*---------------------------------- Create tons of epics ------------------------------------*/
         /*--------------------------------------------------------------------------------------------*/
-
-
-        let loeEpics = [];
-        let epicCount = 0;
-        while (loeEpics.length < 300) {
-            let result = await v1.create('Epic', {
-                    Name: 'ValveEpic LoadEpic ' + epicCount++,
-                    Category: epicCategory,
-                    Scope: scopeOid
-                });
-            loeEpics.push(result);
-        }
+        
+        
+        const epicPromises = times(300).map(i => () => v1.create('Epic', {
+            Name: 'ValveEpic LoadEpic ' + i,
+            Category: epicCategory,
+            Scope: scopeOid
+        }));
+        
+        const epics = await throttler(epicPromises, 25);
+        
+        epics.map(epic => {
+            
+        })
 
         console.log('creating stories on epics');
         var once = false; 
