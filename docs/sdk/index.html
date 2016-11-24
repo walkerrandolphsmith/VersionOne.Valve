@@ -158,7 +158,57 @@ The result set will be an array of objects with the shape described by the selec
 allows for those operations to be invoked with an Oid of an existing Asset
  and the name of the operation. Note: Supported operations are dependent on the 
  AssetType!</p>
-<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers">v1<span class="token punctuation" >.</span><span class="token function" >executeOperation</span><span class="token punctuation" >(</span><span class="token string" >'Story:123'</span><span class="token punctuation" >,</span> <span class="token string" >'Close'</span><span class="token punctuation" >)</span><span class="line-numbers-rows"><span></span></span></code></pre><i class="fa fa-copy"></i></div>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers">v1<span class="token punctuation" >.</span><span class="token function" >executeOperation</span><span class="token punctuation" >(</span><span class="token string" >'Story:123'</span><span class="token punctuation" >,</span> <span class="token string" >'Close'</span><span class="token punctuation" >)</span><span class="line-numbers-rows"><span></span></span></code></pre><i class="fa fa-copy"></i></div><h2><a name="beyond-the-sdk" class="anchor" href="#beyond-the-sdk"></a>Beyond the SDK</h2><p>There are features in VersionOne that are not available through the api and therefore not supported by the SDK.
+We are going to hack at it!</p>
+<p>Let’s take another look at the <code>authenticate</code> method in <code>v1.js</code>:</p>
+<div class="code-wrapper"><pre class="language-js line-numbers"><code class="language-js line-numbers"><span class="token keyword" >const</span> authenticate <span class="token operator" >=</span> <span class="token punctuation" >(</span>username<span class="token punctuation" >,</span> password<span class="token punctuation" >)</span> <span class="token operator" >=</span><span class="token operator" >></span> <span class="token punctuation" >{</span>
+        <span class="token keyword" >const</span> v1 <span class="token operator" >=</span> unauthenticatedV1<span class="token punctuation" >.</span><span class="token function" >withCreds</span><span class="token punctuation" >(</span>username<span class="token punctuation" >,</span> password<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+        <span class="token comment" spellcheck="true">/*
+         *
+         * We create a token for Basic authenticate
+         * We create an instance axios with VersionOne instance url
+         * and the proper HTTP headers using token for Authorization
+         *
+         */</span>
+        <span class="token keyword" >const</span> token <span class="token operator" >=</span> <span class="token function" >btoa</span><span class="token punctuation" >(</span><span class="token template-string" ><span class="token string" >`</span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>username<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >:</span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>password<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >`</span></span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+        <span class="token keyword" >const</span> instance <span class="token operator" >=</span> axios<span class="token punctuation" >.</span><span class="token function" >create</span><span class="token punctuation" >(</span><span class="token punctuation" >{</span>
+                baseURL<span class="token punctuation" >:</span> url<span class="token punctuation" >,</span>
+                timeout<span class="token punctuation" >:</span> <span class="token number" >5000</span><span class="token punctuation" >,</span>
+                headers<span class="token punctuation" >:</span>  <span class="token punctuation" >{</span>
+                    Accept<span class="token punctuation" >:</span> <span class="token string" >'application/json'</span><span class="token punctuation" >,</span>
+                    <span class="token string" >'Content-Type'</span><span class="token punctuation" >:</span> <span class="token string" >'application/json'</span><span class="token punctuation" >,</span>
+                    Authorization<span class="token punctuation" >:</span> <span class="token template-string" ><span class="token string" >`Basic </span><span class="token interpolation" ><span class="token interpolation-punctuation punctuation" >${</span>token<span class="token interpolation-punctuation punctuation" >}</span></span><span class="token string" >`</span></span>
+                <span class="token punctuation" >}</span>
+        <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+        <span class="token keyword" >const</span> query <span class="token operator" >=</span> <span class="token punctuation" >(</span>body<span class="token punctuation" >)</span> <span class="token operator" >=</span><span class="token operator" >></span> v1<span class="token punctuation" >.</span><span class="token function" >query</span><span class="token punctuation" >(</span>body<span class="token punctuation" >)</span><span class="token punctuation" >.</span><span class="token function" >then</span><span class="token punctuation" >(</span>r <span class="token operator" >=</span><span class="token operator" >></span> r<span class="token punctuation" >.</span>data<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+        <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span>
+        <span class="token comment" spellcheck="true">/*
+         *
+         * setMembersRoles is not supported by the SDK,
+         * But knowing the correct url and payload we can do it
+         * These features are not supported by
+         * VersionOne and are liable to break XD
+         *
+         */</span>
+        <span class="token keyword" >const</span> setMemberRoles <span class="token operator" >=</span> <span class="token punctuation" >(</span>relativeUrl<span class="token punctuation" >,</span> payload<span class="token punctuation" >)</span> <span class="token operator" >=</span><span class="token operator" >></span> instance
+            <span class="token punctuation" >.</span><span class="token function" >post</span><span class="token punctuation" >(</span>url <span class="token operator" >+</span> relativeUrl<span class="token punctuation" >,</span> payload<span class="token punctuation" >)</span>
+            <span class="token punctuation" >.</span><span class="token function" >then</span><span class="token punctuation" >(</span>res <span class="token operator" >=</span><span class="token operator" >></span> res<span class="token punctuation" >.</span>data<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+       <span class="token comment" spellcheck="true">/*
+        *
+        * Don't forget to return setMemberRoles
+        *
+        */</span>
+        <span class="token keyword" >return</span> <span class="token punctuation" >{</span>
+            activityStream<span class="token punctuation" >,</span>
+            query<span class="token punctuation" >,</span>
+            create<span class="token punctuation" >,</span>
+            update<span class="token punctuation" >,</span>
+            executeOperation<span class="token punctuation" >,</span>
+            setMemberRoles
+        <span class="token punctuation" >}</span>
+    <span class="token punctuation" >}</span><span class="token punctuation" >;</span><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><i class="fa fa-copy"></i></div>
             </article>
             <div class="aside-wrapper">
                 <aside class="natural">
@@ -185,6 +235,9 @@ allows for those operations to be invoked with an Oid of an existing Asset
                               </li>
                               <li>
                                  <a href="http://walkerrandolphsmith.com/VersionOne.Valve//sdk#operations">Operations</a>
+                              </li>
+                              <li>
+                                 <a href="http://walkerrandolphsmith.com/VersionOne.Valve//sdk#beyond-the-sdk">Beyond the SDK</a>
                               </li>
                           </ul>
                       </section>

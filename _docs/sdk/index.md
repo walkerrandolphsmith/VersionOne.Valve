@@ -195,3 +195,60 @@ allows for those operations to be invoked with an Oid of an existing Asset
 ```js
 v1.executeOperation('Story:123', 'Close')
 ```
+
+## Beyond the SDK
+
+There are features in VersionOne that are not available through the api and therefore not supported by the SDK.
+We are going to hack at it!
+
+Let's take another look at the `authenticate` method in `v1.js`:
+```js
+const authenticate = (username, password) => {
+        const v1 = unauthenticatedV1.withCreds(username, password);
+        /*
+         *
+         * We create a token for Basic authenticate
+         * We create an instance axios with VersionOne instance url
+         * and the proper HTTP headers using token for Authorization
+         *
+         */
+        const token = btoa(`${username}:${password}`);
+        const instance = axios.create({
+                baseURL: url,
+                timeout: 5000,
+                headers:  {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Basic ${token}`
+                }
+        });
+
+        const query = (body) => v1.query(body).then(r => r.data);
+        ...
+        /*
+         *
+         * setMembersRoles is not supported by the SDK,
+         * But knowing the correct url and payload we can do it
+         * These features are not supported by
+         * VersionOne and are liable to break XD
+         *
+         */
+        const setMemberRoles = (relativeUrl, payload) => instance
+            .post(url + relativeUrl, payload)
+            .then(res => res.data);
+
+       /*
+        *
+        * Don't forget to return setMemberRoles
+        *
+        */
+        return {
+            activityStream,
+            query,
+            create,
+            update,
+            executeOperation,
+            setMemberRoles
+        }
+    };
+```
