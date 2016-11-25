@@ -1,7 +1,7 @@
 #VersionOne.Valve
 
 Node application to pump data into a VersionOne instance.
-Check out the enhanced documentation at [the offical docs page](walkerrandolphsmith.github.io/VersionOne.Valve).
+Check out the enhanced documentation at [the offical docs page](https://www.walkerrandolphsmith.github.io/VersionOne.Valve).
 
 - [Global Install](#global-install-coming-soon)
 - [Setup](#setup)
