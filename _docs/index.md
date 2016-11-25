@@ -1,3 +1,7 @@
+---
+template: index.hbt
+---
+
 #VersionOne.Valve
 
 Node application to pump data into a VersionOne instance.
