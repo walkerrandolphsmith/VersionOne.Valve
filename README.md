@@ -1,34 +1,53 @@
 #VersionOne.Valve
 
 Node application to pump data into a VersionOne instance.
+Check out the enhanced documentation at [the offical docs page](walkerrandolphsmith.github.io/VersionOne.Valve).
 
 - [Global Install](#global-install-coming-soon)
 - [Setup](#setup)
 - [Running](#run)
 - [New Features](#new-features)
-- [Update Env Vars](#update-env-vars)
 - [Directory Structure](#directory-structure)
 - [File Anatomy](#file-anatomy)
-- [Manual Setup](#manual-setup)
 - [Contributors](#contributors)
 - [Issues](#issues)
 
-## Global install coming soon
-When published as a npm package it can be globally installed using
-`npm i -g` and will have some added benefits.
-1. Run from any directory on your command line!
-2. Forget about paths like `./node_modules/.bin/gulp` or `./bin/index.js` just type `valve <command> <options>`
-
 ## Setup
-Clone the repo and run `npm run boot` within the directory.
-On windows you may need to run terminal as admin.
 
-That's it. If you want more control you can check out Manual Setup at bottom.
+1. Installs dependencies  
+2. Creates a `.env` file with default values  
+
+### Dependencies
+Start by installing all dependencies:
+```
+npm install
+```
+
+### Configure
+Create a `.env` file in the root of the application to connect to VersionOne instance:
+
+```
+V1Protocol=       //VersionOne instance's protocol
+V1Port=           //VersionOne instance's port
+V1Host=           //VersionOne instance's host
+V1Instance=       //VersionOne instance's name
+V1Username=       //VersionOne instance's user's username
+V1Password=       //VersionOne instance's user's password
+V1AccessToken=    //VersionOne instance's user's access token
+```
 
 ## Run
-Run a valve file (populate a feature)
+Some scripts require selenium.
+In a terminal from the Valve directory run
 ```
-./bin/index.js run ./src/features/daag/index.js
+./node-modules/.bin/selenium-standalone install
+./node-modules/.bin/selenium-standalone start
+```
+
+
+Open another terminal window, and within the Valve directory run a Valve script with
+```
+./bin/index run ./src/features/daag/index.js
 ```
 
 ## New Features
@@ -131,34 +150,6 @@ module.exports = class ValveRunner extends Runner {
 };
 ```
 
-
-## Manual Setup
-
-`npm run boot` does two things  
-1. Installs dependencies  
-2. Creates a `.env` file with default values  
-
-We can does these steps manually as well with the following guide:
-
-### Dependencies
-Start by installing all dependencies:
-```
-npm install
-```
-
-### Configure
-Create a `.env` file in the root of the application to connect to VersionOne instance:
-
-```
-V1Protocol=       //VersionOne instance's protocol
-V1Port=           //VersionOne instance's port
-V1Host=           //VersionOne instance's host
-V1Instance=       //VersionOne instance's name
-V1Username=       //VersionOne instance's user's username
-V1Password=       //VersionOne instance's user's password
-V1AccessToken=    //VersionOne instance's user's access token
-```
-
 ## Contributors
 
 When attempting to contribute to this project the following should be added to the `.env` file:
@@ -170,6 +161,7 @@ V1Host=www14.v1host.com
 V1Instance=v1sdktesting
 V1AccessToken=Bearer 1.jA9m1Of4OUnAx/SCuOIGyE8DiCo=
 ```
+
 
 ## Issues
 
