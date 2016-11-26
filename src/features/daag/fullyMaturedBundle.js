@@ -1,6 +1,7 @@
 import Runner from './../../runner';
 import dropMoment from './../../common/dropMoment';
 import times from './../../common/times';
+import throttler from './../../common/throttler';
 import {
     getDaagScope,
     createDoneStory,
@@ -29,18 +30,11 @@ module.exports = class ValveRunner extends Runner {
 
         const MATURED_BUNDLE_PACKAGE = 'Matured Bundle Package';
 
-        await createBundle(v1, developmentPhase, MATURED_BUNDLE_PACKAGE, [
-            doneChangeSets[0], doneChangeSets[1], doneChangeSets[2], doneChangeSets[3]
-        ]);
-
-        await createBundle(v1, testingPhase, MATURED_BUNDLE_PACKAGE, [
-            doneChangeSets[0], doneChangeSets[1], doneChangeSets[2], doneChangeSets[3]
-        ]);
-
-        await createBundle(v1, productionPhase, MATURED_BUNDLE_PACKAGE, [
-            doneChangeSets[0], doneChangeSets[1], doneChangeSets[2], doneChangeSets[3]
-        ]);
-
-        return Promise.resolve();
+        const promises = [
+            ()  => createBundle(v1, developmentPhase, MATURED_BUNDLE_PACKAGE, doneChangeSets),
+            () => createBundle(v1, testingPhase, MATURED_BUNDLE_PACKAGE, doneChangeSets),
+            () => createBundle(v1, productionPhase, MATURED_BUNDLE_PACKAGE, doneChangeSets)
+        ];
+        return throttler(promises, 3);
     }
 };
