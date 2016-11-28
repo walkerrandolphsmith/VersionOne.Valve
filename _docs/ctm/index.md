@@ -1,6 +1,0 @@
----
-template: index.hbt
----
-
-## Continuum
-
