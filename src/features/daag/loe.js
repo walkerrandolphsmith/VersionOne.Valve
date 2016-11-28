@@ -3,7 +3,7 @@ import dropMoment from './../../common/dropMoment';
 import times from './../../common/times';
 import throttler from './../../common/throttler';
 import {
-    getDaagScope
+    getDaagScope,
     createStory,
     createChangeSet,
     createSpreadWorkitem
@@ -25,7 +25,7 @@ module.exports = class ValveRunner extends Runner {
         /*--------------------------------------------------------------------------------------------*/
 
 
-        const epicPromises = times(1000).map((epicCount) => {
+        const epicPromises = times(10).map((epicCount) => {
             return () => v1.create('Epic', {
                 Name: 'ValveEpic LoadEpic ' + epicCount,
                 Category: epicCategory,

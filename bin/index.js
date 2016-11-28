@@ -1,7 +1,6 @@
-#!/usr/bin/env node --harmony
-require('babel-register')({
-    presets: [ 'stage-0' ]
-});
+require('babel-register')();
+require('babel-polyfill');
+
 const nopt = require("nopt");
 const opts = require('./options');
 
@@ -10,8 +9,6 @@ const options = nopt(opts.knownOpts, opts.shortHands, process.argv, 2);
 
 const fs = require('fs');
 const chalk = require('chalk');
-const co = require('co');
-const prompt = require('co-prompt');
 const commands = require('./commands');
 
 const requireCallback = (name, module) => console.log('Loading:',name);
@@ -39,8 +36,6 @@ Valve.launch({
 }, invoke);
 
 function invoke (env) {
-
-
     const desiredCommand = options.argv.original[0];
     const fileName = options.argv.original[1];
 
